@@ -27,23 +27,29 @@ pyqt5
 2.  Get team shortname and ID from URL
 
 3. Enter shortname and ID
+
 ![enter image description here](https://i.ibb.co/pPBRywk/python-QPXv-Ly-I5-W6.png)
 
 4. Click **Get data from TM**
+
 ![enter image description here](https://i.ibb.co/FH1708G/python-Zt-JNGd-Dwfr.png)
 
 5. You will get all data you need
 
 6. Right click on row (delete player, change skin, change skin, ...)
+
 ![enter image description here](https://i.ibb.co/Xzn1rjH/python-0oy-Gpc26-Bo.png)
 
 7. Click **Generate formation** and get formation to import
+
 ![enter image description here](https://i.ibb.co/tZ5sfYW/python-GNY9h-Hwxa-I.png)
 
 8. Change players in formation
+
 ![enter image description here](https://i.ibb.co/F0dBnmB/python-Qkp2-L7hbmq.png)
 
 9. Save to CSV file and import to SWOS Editors (e.g. SWOES2, ...)
+
 ![enter image description here](https://i.ibb.co/02Zg3px/python-07a9vbrvp-M.png) 
 
 # Download standalone version
