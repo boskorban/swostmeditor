@@ -1,0 +1,3 @@
+python .\parser.py https://www.transfermarkt.com/nd-lendava-1903/startseite/verein/9233 72 1527 3 5 2 "C:\SWOS"
+
+python .\parser.py URL_TEAM COUNTRY_ID CLUB_ID FORMATION(X X X) PATHTOSAVE
