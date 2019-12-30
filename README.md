@@ -1,0 +1,2 @@
+# swostmeditor
+SWOS Transfermarkt Editor
