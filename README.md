@@ -4,6 +4,8 @@ SWOS Transfermarkt Editor
 
 Download data from Transfermarkt.com and import in Amiga SWOS (https://sensiblesoccer.de/faq)
 
+# Thanks to SensibleSoccer.de community (Armandojimenez, gatifun)
+
 # Changelog
 | Date | Changes |
 |--|--|
