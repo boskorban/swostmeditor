@@ -53,7 +53,7 @@ pyqt5
 
 ![enter image description here](https://i.ibb.co/F0dBnmB/python-Qkp2-L7hbmq.png)
 
-9. Save to CSV file and import to SWOS Editors (e.g. SWOES2, ...)
+9. Save to CSV file and import to SWOS Editors (e.g. AG-SWSEdt, SWOES2, ...)
 
 ![enter image description here](https://i.ibb.co/02Zg3px/python-07a9vbrvp-M.png) 
 
