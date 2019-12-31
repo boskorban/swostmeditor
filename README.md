@@ -10,9 +10,10 @@ AG-SWSEdt (https://github.com/anoxic83/AG_SWSEdt)
 Armandojimenez, gatifun
 
 # Changelog
-| Date | Changes |
-|--|--|
-| 30.12.2019 | First version - SWOS TM Editor v1.0 |
+|Version | Date | Changes |
+|--|--|--|
+|1.0| 30.12.2019 | First version - SWOS TM Editor v1.0 |
+|1.0.1| 31.12.2019 | New data structure,<br/>Issue  #1 closed |
 
 
 # Requirements
