@@ -1,3 +1,5 @@
+# Code create by BOCo23 https://github.com/boskorban
+
 from PyQt5.QtWidgets import *
 from PyQt5 import *
 from bs4 import BeautifulSoup
@@ -11,8 +13,6 @@ import os
 import webbrowser
 import random
 import math
-
-# https://build-system.fman.io/pyqt5-tutorial
 
 
 def returnSkillArray(n):
@@ -41,52 +41,52 @@ def returnSkillArray(n):
     return array
 
 
-def VrniFile(pozicija):
-    if pozicija == 'RB' or pozicija == 'LB':
-        return 'RBLB.csv'
-    elif pozicija == 'RW' or pozicija == 'LW':
-        return 'RWLW.csv'
+def getFile(position):
+    if position == 'RB' or position == 'LB':
+        return 'data\\RBLB.csv'
+    elif position == 'RW' or position == 'LW':
+        return 'data\\RWLW.csv'
     else:
-        return pozicija + '.csv'
+        return 'data\\{}.csv'.format(position)
 
 
-def VrniDrzavo(drzava):
-    with open('countries.csv', "r") as csv_file:
+def getCountry(drzava):
+    with open('data\\countries.csv', "r") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=';')
         for row in csv_reader:
             if row[0] == drzava:
                 return row[1]
 
 
-def VrniPozicijo(pozicija):
-    with open('roles.csv', "r") as csv_file:
+def getPosition(position):
+    with open('data\\roles.csv', "r") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=';')
         for row in csv_reader:
-            if row[1] == pozicija:
+            if row[1] == position:
                 return row[0]
 
 
-def VrniCeno(pozicija, cena):
-    with open(VrniFile(pozicija), "r") as csv_file:
+def getPrice(position, price):
+    with open(getFile(position), "r") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=';')
         for row in csv_reader:
-            if float(row[2]) <= float(cena) and float(row[1]) >= float(cena):
+            if float(row[2]) <= float(price) and float(row[1]) >= float(price):
                 return row[0]
 
 
-def VrniCenoSkill(pozicija, skill):
-    with open(VrniFile(pozicija), "r") as csv_file:
+def getPriceSkill(position, skill):
+    with open(getFile(position), "r") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=';')
         for row in csv_reader:
             if int(row[3]) == int(skill):
                 return row[0]
 
 
-def VrniSkill(pozicija, cena):
-    with open(VrniFile(pozicija), "r") as csv_file:
+def getSkill(position, price):
+    with open(getFile(position), "r") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=';')
         for row in csv_reader:
-            if float(row[2]) <= float(cena) and float(row[1]) >= float(cena):
+            if float(row[2]) <= float(price) and float(row[1]) >= float(price):
                 return row[3]
 
 
@@ -170,7 +170,7 @@ def on_btn_generate_clicked():
                               tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
         gk_arr.pop(df_gk['M'].idxmax())
 
-        # obramba
+        # goalkeepers
         for x in range(int(defence) - 2):
             df_d = pandas.DataFrame(d_arr, columns=[
                                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
@@ -179,7 +179,7 @@ def on_btn_generate_clicked():
                                   tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
             d_arr.pop(df_d['M'].idxmax())
 
-            # desni back
+            # right back
         if len(rb_arr) > 0:
             df_rb = pandas.DataFrame(rb_arr, columns=[
                                      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
@@ -195,7 +195,7 @@ def on_btn_generate_clicked():
                                      tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
             d_arr.pop(df_d['M'].idxmax())
 
-            # levi back
+            # left back
         if len(lb_arr) > 0:
             df_lb = pandas.DataFrame(lb_arr, columns=[
                                      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
@@ -211,7 +211,7 @@ def on_btn_generate_clicked():
                                   tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
             d_arr.pop(df_d['M'].idxmax())
 
-            # sredina
+            # midfield
         if int(midfield) == 2:
             m_tmp_arr = m_arr + rw_arr + lw_arr
             for x in range(2):
@@ -221,7 +221,7 @@ def on_btn_generate_clicked():
                 formation_arr.append([tmp[0], str(int(defence) + 2 + x), tmp[1], tmp[2], tmp[3], tmp[4],
                                       tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
                 m_tmp_arr.pop(df_m['M'].idxmax())
-        else:  # več kot 2 v sredini
+        else:  # more than 2 in midfield
             for x in range(int(midfield) - 2):
                 df_m = pandas.DataFrame(m_arr, columns=[
                                         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
@@ -230,7 +230,7 @@ def on_btn_generate_clicked():
                                       tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
                 m_arr.pop(df_m['M'].idxmax())
 
-                # desni winger
+                # right winger
             if len(rw_arr) > 0:
                 df_rw = pandas.DataFrame(rw_arr, columns=[
                                          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
@@ -246,7 +246,7 @@ def on_btn_generate_clicked():
                                                         tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
                 m_arr.pop(df_m['M'].idxmax())
 
-                # levi back
+                # left winger
             if len(lw_arr) > 0:
                 df_lw = pandas.DataFrame(lw_arr, columns=[
                                          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
@@ -262,7 +262,7 @@ def on_btn_generate_clicked():
                                       tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
                 m_arr.pop(df_lw['M'].idxmax())
 
-            # napad
+            # attack
             if len(a_arr) < int(attack):
                 if int(midfield) == 2:
                     a_tmp_arr = a_arr + m_tmp_arr
@@ -279,7 +279,7 @@ def on_btn_generate_clicked():
                                       tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
                 a_tmp_arr.pop(df_a['M'].idxmax())
 
-            # rezerve - vratar
+            # reserves - goalkeeper
             df_gk = pandas.DataFrame(gk_arr, columns=[
                                      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
             tmp = gk_arr[df_gk['M'].idxmax()]
@@ -287,7 +287,7 @@ def on_btn_generate_clicked():
                                   tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
             gk_arr.pop(df_gk['M'].idxmax())
 
-            # rezerve - ostali
+            # reserves - others
             if int(midfield) == 2 and len(a_arr) < int(attack):
                 r_arr = rb_arr + lb_arr + d_arr + a_tmp_arr
             elif int(midfield) == 2:
@@ -305,7 +305,7 @@ def on_btn_generate_clicked():
                                       tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
                 r_arr.pop(df_r['M'].idxmax())
 
-            # rezerve - izven
+            # reserves - out of 16
             r_arr = gk_arr + r_arr
             for x in range(len(r_arr)):
                 df_r = pandas.DataFrame(r_arr, columns=[
@@ -361,14 +361,18 @@ def on_btn_get_data_clicked():
                 igralec = igralec.upper()
                 pozicija = zapis.find("td", {"class": "posrela"}).find(
                     "table", {"class": "inline-table"}).findAll("tr")[1].find("td").text
+                posi = getPosition(pozicija)
                 drzavljanstvo = zapis.findAll("td")[7].find("img")["title"]
-                cena = zapis.findAll("td")[8].text
-                cena_div = int(cena.replace("€", "").replace(
-                    "k", "000").replace("m", "0000").replace(".", "")) / 1000000
-                posi = VrniPozicijo(pozicija)
-                cena_swos = VrniCeno(posi, cena_div)
-
-                _sum = int(VrniSkill(posi, cena_div))
+                cena = zapis.findAll("td")[8].text.strip()
+                cena = cena.replace("-", "")
+                if cena == '':
+                    cena_div = 0
+                    cena_swos = 0
+                    _sum = 0
+                else:
+                    cena_div = int(cena.replace("€", "").replace("k", "000").replace("m", "0000").replace(".", "")) / 1000000
+                    cena_swos = getPrice(posi, cena_div)
+                    _sum = int(getSkill(posi, cena_div))
 
                 rnd_array = returnSkillArray(_sum)
 
@@ -389,7 +393,7 @@ def on_btn_get_data_clicked():
                     sp = str(rnd_array[5])
                     fi = str(rnd_array[6])
 
-                full_arr.append([VrniDrzavo(drzavljanstvo), igralec, posi,
+                full_arr.append([getCountry(drzavljanstvo), igralec, posi,
                                  general_skin, pa, ve, he, ta, co, sp, fi, cena_swos, str(_sum), str(cena_div), str(0)])
 
         r = requests.get("https://www.transfermarkt.com/{}/leistungsdaten/verein/{}".format(
@@ -671,13 +675,13 @@ def setSWOSPriceEach(row_id):
     sum_skill = int(full_arr[row_id][4]) + int(full_arr[row_id][5]) + int(full_arr[row_id][6]) + int(
         full_arr[row_id][7]) + int(full_arr[row_id][8]) + int(full_arr[row_id][9]) + int(full_arr[row_id][10])
     full_arr[row_id][12] = str(sum_skill)
-    full_arr[row_id][11] = VrniCeno(full_arr[row_id][2], sum_skill)
+    full_arr[row_id][11] = getPrice(full_arr[row_id][2], sum_skill)
 
 
 def recalculateSwosSkillPrice(poz, position, skill):
     global full_arr
 
-    cena_swos_tmp = VrniCenoSkill(position, skill)
+    cena_swos_tmp = getPriceSkill(position, skill)
 
     rnd_array_tmp = returnSkillArray(skill)
     if position == 'GK':
@@ -753,16 +757,6 @@ def setName(current):
         return text
 
 
-#def table_key_pressed():
-#    if tabela.selectionModel().selection().indexes():
-#	    for i in tabela.selectionModel().selection().indexes():
-#	        row, column = i.row(), i.column()
-#
-#	    full_arr.pop(row)
-#
-#	    fillTable()
-
-
 app = QApplication([])
 app.setStyle('Fusion')
 
@@ -782,11 +776,11 @@ layout_7 = QHBoxLayout()
 tabs.addTab(tab_TM, "Transfermarkt")
 tabs.addTab(tab_SWOS, "SWOS csv")
 
-# variable
+# variables for GUI
 full_arr = []
 formation_arr = []
 
-# komponente
+# components for GUI
 lbl_team_name = QLabel('Team short name TM ')
 ed_team_name = QLineEdit('nd-lendava-1903')
 lbl_team_id = QLabel('Team ID TM')
@@ -815,7 +809,6 @@ tabela = QTableWidget()
 tabela.setEditTriggers(QTableWidget.NoEditTriggers)
 tabela.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 tabela.customContextMenuRequested.connect(generateMenu)
-#tabela.cellDoubleClicked.connect(table_key_pressed)
 
 lbl_league_id_swoes = QLabel('League ID SWOES')
 ed_league_id_swoes = QLineEdit()
@@ -832,12 +825,12 @@ ed_save_csv = QLineEdit("C:\\SWOS")
 
 btn_savecsv = QPushButton('Save CSV file')
 
-# signali / eventi
+# signals / events
 btn_get_data.clicked.connect(on_btn_get_data_clicked)
 btn_generate.clicked.connect(on_btn_generate_clicked)
 btn_savecsv.clicked.connect(on_btn_savecsv_clicked)
 
-# dolžine
+# length for labels
 lbl_team_name.setFixedWidth(100)
 lbl_team_id.setFixedWidth(100)
 lbl_league_id_swoes.setFixedWidth(100)
@@ -846,7 +839,7 @@ lbl_team_name_tm.setFixedWidth(100)
 lbl_coach_name_tm.setFixedWidth(100)
 lbl_formation_tm.setFixedWidth(100)
 
-# izgled - tab TM
+# layout - tab TM
 layout_1.addWidget(lbl_team_name)
 layout_1.addWidget(ed_team_name)
 layout_2.addWidget(lbl_team_id)
@@ -858,7 +851,7 @@ layout_3.addWidget(ed_coach_name_tm)
 layout_3.addWidget(lbl_formation_tm)
 layout_3.addWidget(ed_formation_tm)
 
-# izgled - tab SWOS
+# layout - tab SWOS
 layout_4.addWidget(lbl_league_id_swoes)
 layout_4.addWidget(ed_league_id_swoes)
 layout_5.addWidget(lbl_team_id_swoes)
@@ -868,7 +861,7 @@ layout_7.addWidget(lbl_save_csv)
 layout_7.addWidget(ed_save_csv)
 layout_7.addWidget(btn_savecsv)
 
-# layout TM
+# layout - main TM
 layout_tm.addLayout(layout_1)
 layout_tm.addLayout(layout_2)
 
@@ -880,7 +873,7 @@ layout_tm.addWidget(tabela)
 
 layout_tm.addWidget(btn_generate)
 
-# layout SWOS
+# layout - main SWOS
 layout_swos.addLayout(layout_4)
 layout_swos.addLayout(layout_5)
 layout_swos.addLayout(layout_6)
