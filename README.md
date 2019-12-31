@@ -29,7 +29,7 @@ pyqt5
 # How to use it
 1. Search for you team on Transfermarkt.com 
 
-2.  Get team shortname and ID from URL
+2. Get team shortname and ID from URL
 
 3. Enter shortname and ID
 
