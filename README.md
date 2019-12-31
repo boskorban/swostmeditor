@@ -1,8 +1,13 @@
 
-# swostmeditor
-SWOS Transfermarkt Editor
+# SWOS Transfermarkt Editor
 
-Download data from Transfermarkt.com and import in Amiga SWOS (https://sensiblesoccer.de/faq)
+Download data from Transfermarkt.com and import in Amiga SWOS (https://sensiblesoccer.de/faq)<br/><br/>
+Import software<br/>
+SWOEditorS ver 1.3.0 (http://www.swoes.info/editor_downloads/)<br/>
+AG-SWSEdt (https://github.com/anoxic83/AG_SWSEdt)
+
+# Thanks to SensibleSoccer.de community 
+Armandojimenez, gatifun
 
 # Changelog
 | Date | Changes |
@@ -11,10 +16,10 @@ Download data from Transfermarkt.com and import in Amiga SWOS (https://sensibles
 
 
 # Requirements
-requests,
-bs4,
-numpy,
-pandas,
+requests<br/>
+bs4<br/>
+numpy<br/>
+pandas<br/>
 pyqt5
 
 
@@ -24,7 +29,7 @@ pyqt5
 # How to use it
 1. Search for you team on Transfermarkt.com 
 
-2.  Get team shortname and ID from URL
+2. Get team shortname and ID from URL
 
 3. Enter shortname and ID
 
@@ -52,5 +57,5 @@ pyqt5
 
 ![enter image description here](https://i.ibb.co/02Zg3px/python-07a9vbrvp-M.png) 
 
-# Download standalone version
-https://boskorban.si/SWOS_TM_Editor/SWOS_TM_Editor_v1.0.zip
+# Download latest standalone version
+https://github.com/boskorban/swostmeditor/releases
