@@ -6,7 +6,7 @@ Import software<br/>
 AG-SWSEdt (https://github.com/anoxic83/AG_SWSEdt)
 
 # Thanks to SensibleSoccer.de community 
-Armandojimenez, gatifun
+Armandojimenez, Gatifun
 
 # Changelog
 |Version | Date | Changes |
