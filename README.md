@@ -10,8 +10,9 @@ Armandojimenez, Gatifun
 # Changelog
 |Version | Date | Changes |
 |--|--|--|
-|1.0| 30.12.2019 | First version - SWOS TM Editor v1.0 |
-|1.0.1| 31.12.2019 | New data folder structure<br/>Issue  #1 closed |
+| 1.0 | 30.12.2019 | First version - SWOS TM Editor v1.0 |
+| 1.0.1 | 31.12.2019 | New data folder structure<br/>Issue  #1 closed |
+| 1.0.2 | 31.12.2019 | Check if URL exists<br/>Removed print's<br/>Other small changes |
 
 
 # Requirements
