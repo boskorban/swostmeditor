@@ -116,7 +116,6 @@ def on_btn_generate_clicked():
     elif ed_team_name_tm.text() == '':
         alert_popup("Team name is empty")
     elif len(ed_coach_name_tm.text()) > 24:
-        print(ed_coach_name_tm.text())
         alert_popup("Coach name too long (max 24)")
     elif ed_coach_name_tm.text() == '':
         alert_popup("Coach name is empty")
@@ -321,6 +320,31 @@ def on_btn_generate_clicked():
 
 
 def on_btn_get_data_clicked():
+    if ed_team_url.text() != '':
+        headers = {"User-Agent": "Mozilla/5.0"}
+        r = requests.get(ed_team_url.text(), headers=headers)
+        if r.status_code != 200:
+            alert_popup("URL does not exists")
+            return None
+
+        tmp_url = ''
+        tmp_url_team_name = ''
+        tmp_url_team_id = ''
+
+        tmp_url = ed_team_url.text()
+        tmp_url = tmp_url.replace("https://", "").replace("http://", "")
+
+        tmp_url_arr = tmp_url.split('/')
+        tmp_url_team_name = tmp_url_arr[1]
+        tmp_url_team_id = tmp_url_arr[4]
+
+        ed_team_url.setText('')
+        ed_team_name.setText(tmp_url_team_name)
+        ed_team_id.setText(tmp_url_team_id)
+
+    if ed_team_name.text() == '' or ed_team_id.text() == '':
+    	alert_popup("Team shortname or team ID is empty")
+
     if ed_team_name.text() != '' and ed_team_id.text() != '':
         global full_arr
         global formation_arr
@@ -370,7 +394,8 @@ def on_btn_get_data_clicked():
                     cena_swos = 0
                     _sum = 0
                 else:
-                    cena_div = int(cena.replace("€", "").replace("k", "000").replace("m", "0000").replace(".", "")) / 1000000
+                    cena_div = int(cena.replace("€", "").replace(
+                        "k", "000").replace("m", "0000").replace(".", "")) / 1000000
                     cena_swos = getPrice(posi, cena_div)
                     _sum = int(getSkill(posi, cena_div))
 
@@ -765,6 +790,7 @@ tab_TM = QWidget()
 tab_SWOS = QWidget()
 layout_tm = QVBoxLayout()
 layout_swos = QVBoxLayout()
+layout_0 = QHBoxLayout()
 layout_1 = QHBoxLayout()
 layout_2 = QHBoxLayout()
 layout_3 = QHBoxLayout()
@@ -781,10 +807,13 @@ full_arr = []
 formation_arr = []
 
 # components for GUI
+lbl_team_url = QLabel('Team URL on TM ')
+ed_team_url = QLineEdit(
+    'https://www.transfermarkt.com/nd-lendava-1903/startseite/verein/9233')
 lbl_team_name = QLabel('Team short name TM ')
-ed_team_name = QLineEdit('nd-lendava-1903')
+ed_team_name = QLineEdit('')
 lbl_team_id = QLabel('Team ID TM')
-ed_team_id = QLineEdit('9233')
+ed_team_id = QLineEdit('')
 btn_get_data = QPushButton('Get data from TM')
 
 btn_generate = QPushButton('Generate formation')
@@ -831,6 +860,7 @@ btn_generate.clicked.connect(on_btn_generate_clicked)
 btn_savecsv.clicked.connect(on_btn_savecsv_clicked)
 
 # length for labels
+lbl_team_url.setFixedWidth(100)
 lbl_team_name.setFixedWidth(100)
 lbl_team_id.setFixedWidth(100)
 lbl_league_id_swoes.setFixedWidth(100)
@@ -840,6 +870,8 @@ lbl_coach_name_tm.setFixedWidth(100)
 lbl_formation_tm.setFixedWidth(100)
 
 # layout - tab TM
+layout_0.addWidget(lbl_team_url)
+layout_0.addWidget(ed_team_url)
 layout_1.addWidget(lbl_team_name)
 layout_1.addWidget(ed_team_name)
 layout_2.addWidget(lbl_team_id)
@@ -862,6 +894,7 @@ layout_7.addWidget(ed_save_csv)
 layout_7.addWidget(btn_savecsv)
 
 # layout - main TM
+layout_tm.addLayout(layout_0)
 layout_tm.addLayout(layout_1)
 layout_tm.addLayout(layout_2)
 
