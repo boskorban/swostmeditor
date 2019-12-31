@@ -37,34 +37,34 @@ pyqt5
     py gui.py
 
 # How to use it
-1. Search for you team on Transfermarkt.com 
+1. Search for team on Transfermarkt.com 
 
 2. Get team shortname and ID from URL - https://www.transfermarkt.com/nd-lendava-1903/startseite/verein/9233
     Example shortname: **nd-lendava-1903** and ID: **9233**
 
-3. Enter shortname and ID
+3. Enter shortname and ID into software - first two textboxes
 
 ![Step 1](https://i.ibb.co/pPBRywk/python-QPXv-Ly-I5-W6.png)
 
-4. Click **Get data from TM**
+4. Click button **Get data from TM**
 
 ![Step 2](https://i.ibb.co/FH1708G/python-Zt-JNGd-Dwfr.png)
 
 5. You will get all data you need
 
-6. Right click on row (delete player, change skin, change skin, ...)
+6. Right click on row (delete player, change skin, change position, ...)
 
 ![Step 3](https://i.ibb.co/Xzn1rjH/python-0oy-Gpc26-Bo.png)
 
-7. Click **Generate formation** and get formation to import
+7. Click button **Generate formation** and get formation for import - tab **SWOS csv**
 
 ![Step 4](https://i.ibb.co/tZ5sfYW/python-GNY9h-Hwxa-I.png)
 
-8. Change players in formation
+8. Change first team (first 11 players) and bench players (from 12-16) in formation
 
 ![Step 5](https://i.ibb.co/F0dBnmB/python-Qkp2-L7hbmq.png)
 
-9. Save to CSV file and import to SWOS Editors (e.g. AG-SWSEdt, SWOES2, ...)
+9. Save to CSV file and import to SWOS Editors (e.g. **AG-SWSEdt**, SWOES2, ...)
 
 ![Step 6](https://i.ibb.co/02Zg3px/python-07a9vbrvp-M.png) 
 
