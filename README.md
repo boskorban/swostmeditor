@@ -3,7 +3,6 @@
 
 Download data from Transfermarkt.com and import in Amiga SWOS (https://sensiblesoccer.de/faq)<br/><br/>
 Import software<br/>
-SWOEditorS ver 1.3.0 (http://www.swoes.info/editor_downloads/)<br/>
 AG-SWSEdt (https://github.com/anoxic83/AG_SWSEdt)
 
 # Thanks to SensibleSoccer.de community 
