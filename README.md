@@ -71,3 +71,6 @@ pyqt5
 
 # Download latest standalone version
 https://github.com/boskorban/swostmeditor/releases
+
+# Donations
+http://paypal.me/boskorban
