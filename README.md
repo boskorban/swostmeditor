@@ -13,7 +13,7 @@ Armandojimenez, Gatifun
 | 1.0 | 30.12.2019 | First version - SWOS TM Editor v1.0 |
 | 1.0.1 | 31.12.2019 | New data folder structure<br/>Issue  #1 closed |
 | 1.0.2 | 31.12.2019 | Check if URL exists<br/>Removed print's<br/>Other small changes |
-| 1.1 | 2.1.2020 | Start application maximized<br/>Download and show player images |
+| 1.1 | 3.1.2020 | Start application maximized<br/>Download and show player images<br/>Save image as data in array<br/>Added number of appearances, in squad and goals |
 
 
 # Requirements
