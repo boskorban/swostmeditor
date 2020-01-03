@@ -323,17 +323,6 @@ def on_btn_generate_clicked():
 
 
 def on_btn_get_data_clicked():
-    if not os.path.exists("tmp_img"):
-        try:
-            os.makedirs("tmp_img")
-        except OSError as exc:
-            raise
-
-    tmp_files = os.listdir("tmp_img")
-    for f in tmp_files:
-        os.remove("tmp_img\\" + f)
-
-
     if ed_team_url.text() != '':
         headers = {"User-Agent": "Mozilla/5.0"}
         r = requests.get(ed_team_url.text(), headers=headers)
@@ -357,7 +346,7 @@ def on_btn_get_data_clicked():
         ed_team_id.setText(tmp_url_team_id)
 
     if ed_team_name.text() == '' or ed_team_id.text() == '':
-    	alert_popup("Team shortname or team ID is empty")
+        alert_popup("Team shortname or team ID is empty")
 
     if ed_team_name.text() != '' and ed_team_id.text() != '':
         global full_arr
@@ -406,8 +395,6 @@ def on_btn_get_data_clicked():
                 url = slika
                 data = urlopen(url).read()
                 image.loadFromData(data)
-                image.save("tmp_img\\{}.jpg".format(igralec), "JPG")
-                slika = "{}.jpg".format(igralec)
 
                 drzavljanstvo = zapis.findAll("td")[7].find("img")["title"]
                 cena = zapis.findAll("td")[8].text.strip()
@@ -442,7 +429,7 @@ def on_btn_get_data_clicked():
                     fi = str(rnd_array[6])
 
                 full_arr.append([getCountry(drzavljanstvo), igralec, posi,
-                                 general_skin, pa, ve, he, ta, co, sp, fi, cena_swos, str(_sum), str(cena_div), str(0), slika])
+                                 general_skin, pa, ve, he, ta, co, sp, fi, cena_swos, str(_sum), str(cena_div), str(0), str(0), str(0), str(0), image])
 
         r = requests.get("https://www.transfermarkt.com/{}/leistungsdaten/verein/{}".format(
             ed_team_name.text(), ed_team_id.text()), headers=headers)
@@ -459,6 +446,12 @@ def on_btn_get_data_clicked():
                 igralec = unicodedata.normalize('NFD', igralec).encode(
                     'ascii', 'ignore').decode('utf8')
                 igralec = igralec.upper()
+                squad = zapis.findAll("td")[7].text
+                squad = squad.replace("-", "0")
+                appereance = zapis.findAll("td")[8].text
+                appereance = appereance.replace("-", "0").replace("Not used during this season", "0")
+                goals = zapis.findAll("td")[9].text
+                goals = goals.replace("-", "0")
                 minute = zapis.find("td", {"class": "rechts"}).text
                 minute = minute.replace(".", "").replace(
                     "'", "").replace("-", "0")
@@ -467,6 +460,9 @@ def on_btn_get_data_clicked():
                 for igrac in full_arr:
                     if igrac[1] == igralec:
                         igrac[14] = minute
+                        igrac[15] = squad
+                        igrac[16] = appereance
+                        igrac[17] = goals
                         continue
 
         ed_team_name_tm.setText(ekipa)
@@ -508,21 +504,21 @@ def fillTable():
     global full_arr
 
     tabela.setRowCount(len(full_arr))
-    tabela.setColumnCount(16)
+    tabela.setColumnCount(19)
     tabela.setHorizontalHeaderLabels(["National", "Name", "Position", "Player skin", "PA",
-                                      "VE", "HE", "TA", "CO", "SP", "FI", "SWOS price", "Sum skills", "TM price", "Minutes", "Image"])
+                                      "VE", "HE", "TA", "CO", "SP", "FI", "SWOS price", "Sum skills", "TM price", "Minutes", "In squad", "Appearances", "Goals", "Image"])
 
     for row in range(0, len(full_arr)):
-        for column in range(0, 15):
+        for column in range(0, 18):
             tabela.setItem(row, column, QTableWidgetItem((full_arr[row][column])))
             
         painter = QPainter()
         lbl = QLabel()
-        image = QPixmap("tmp_img\\{}".format(full_arr[row][15]))
+        image = QPixmap(full_arr[row][18])
         image = image.scaled(28, 32)
 
         lbl.setPixmap(image)
-        tabela.setCellWidget(row, 15, lbl)
+        tabela.setCellWidget(row, 18, lbl)
 
     tabela.resizeColumnsToContents()
     tabela.resizeRowsToContents()
