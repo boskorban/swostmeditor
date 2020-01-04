@@ -92,6 +92,20 @@ def getSkill(position, price):
             if float(row[2]) <= float(price) and float(row[1]) >= float(price):
                 return row[3]
 
+# function to watch same sum of skills and more minutes
+def getTopPlayer(array_player, id_player):
+    index_array = 0
+    return_index = id_player
+    arr_player = array_player[return_index]
+
+    for igralec in array_player:
+        if arr_player[12] == igralec[12]: #skills
+            if arr_player[13] < igralec[13]: #minutes
+                arr_player = igralec
+                return_index = index_array
+        index_array += 1
+
+    return int(return_index)
 
 def alert_popup(text):
     alert = QMessageBox()
@@ -142,76 +156,86 @@ def on_btn_generate_clicked():
         for igralec in full_arr:
             if igralec[2] == 'GK':
                 gk_arr.append([igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6],
-                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), igralec[14]])
+                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), int(igralec[14])])
             elif igralec[2] == 'RB':
                 rb_arr.append([igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6],
-                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), igralec[14]])
+                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), int(igralec[14])])
             elif igralec[2] == 'LB':
                 lb_arr.append([igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6],
-                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), igralec[14]])
+                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), int(igralec[14])])
             elif igralec[2] == 'D':
                 d_arr.append([igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6],
-                              igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), igralec[14]])
+                              igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), int(igralec[14])])
             elif igralec[2] == 'M':
                 m_arr.append([igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6],
-                              igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), igralec[14]])
+                              igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), int(igralec[14])])
             elif igralec[2] == 'RW':
                 rw_arr.append([igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6],
-                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), igralec[14]])
+                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), int(igralec[14])])
             elif igralec[2] == 'LW':
                 lw_arr.append([igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6],
-                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), igralec[14]])
+                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), int(igralec[14])])
             elif igralec[2] == 'A':
                 a_arr.append([igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6],
-                              igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), igralec[14]])
+                              igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), int(igralec[14])])
 
-        df_gk = pandas.DataFrame(gk_arr, columns=[
-                                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-        tmp = gk_arr[df_gk['M'].idxmax()]
-        formation_arr.append([tmp[0], str(1), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5],
-                              tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-        gk_arr.pop(df_gk['M'].idxmax())
+        tmp_int = 0
 
         # goalkeepers
+        df_gk = pandas.DataFrame(gk_arr, columns=[
+                                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
+        tmp_int = getTopPlayer(gk_arr, df_gk['M'].idxmax())
+        tmp = gk_arr[tmp_int]
+        formation_arr.append([tmp[0], str(1), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5],
+                              tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+        gk_arr.pop(tmp_int)
+
+        # defenders
         for x in range(int(defence) - 2):
             df_d = pandas.DataFrame(d_arr, columns=[
-                                    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-            tmp = d_arr[df_d['M'].idxmax()]
+                                    'A', 'B',
+                                     'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
+            tmp_int = getTopPlayer(d_arr, df_d['M'].idxmax())
+            tmp = d_arr[tmp_int]
             formation_arr.append([tmp[0], str(3 + x), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5],
-                                  tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-            d_arr.pop(df_d['M'].idxmax())
+                                  tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+            d_arr.pop(tmp_int)
 
             # right back
         if len(rb_arr) > 0:
             df_rb = pandas.DataFrame(rb_arr, columns=[
                                      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-            tmp = rb_arr[df_rb['M'].idxmax()]
+            tmp_int = getTopPlayer(rb_arr, df_rb['M'].idxmax())
+            tmp = rb_arr[tmp_int]
             formation_arr.insert(1, [tmp[0], str(2), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5],
-                                     tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-            rb_arr.pop(df_rb['M'].idxmax())
+                                     tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+            rb_arr.pop(tmp_int)
         else:
             df_d = pandas.DataFrame(d_arr, columns=[
                                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-            tmp = d_arr[df_d['M'].idxmax()]
+            tmp_int = getTopPlayer(d_arr, df_d['M'].idxmax())
+            tmp = d_arr[tmp_int]
             formation_arr.insert(1, [tmp[0], str(2), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5],
-                                     tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-            d_arr.pop(df_d['M'].idxmax())
+                                     tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+            d_arr.pop(tmp_int)
 
             # left back
         if len(lb_arr) > 0:
             df_lb = pandas.DataFrame(lb_arr, columns=[
                                      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-            tmp = lb_arr[df_lb['M'].idxmax()]
+            tmp_int = getTopPlayer(lb_arr, df_lb['M'].idxmax())
+            tmp = lb_arr[tmp_int]
             formation_arr.append([tmp[0], str(int(defence) + 1), tmp[1], tmp[2], tmp[3], tmp[4],
-                                  tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-            lb_arr.pop(df_lb['M'].idxmax())
+                                  tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+            lb_arr.pop(tmp_int)
         else:
             df_d = pandas.DataFrame(d_arr, columns=[
                                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-            tmp = d_arr[df_d['M'].idxmax()]
+            tmp_int = getTopPlayer(d_arr, df_d['M'].idxmax())
+            tmp = d_arr[tmp_int]
             formation_arr.append([tmp[0], str(int(defence) + 1), tmp[1], tmp[2], tmp[3], tmp[4],
-                                  tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-            d_arr.pop(df_d['M'].idxmax())
+                                  tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+            d_arr.pop(tmp_int)
 
             # midfield
         if int(midfield) == 2:
@@ -219,50 +243,56 @@ def on_btn_generate_clicked():
             for x in range(2):
                 df_m = pandas.DataFrame(m_tmp_arr, columns=[
                                         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-                tmp = m_tmp_arr[df_m['M'].idxmax()]
+                tmp_int = getTopPlayer(m_tmp_arr, df_m['M'].idxmax())
+                tmp = m_tmp_arr[tmp_int]
                 formation_arr.append([tmp[0], str(int(defence) + 2 + x), tmp[1], tmp[2], tmp[3], tmp[4],
-                                      tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-                m_tmp_arr.pop(df_m['M'].idxmax())
+                                      tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+                m_tmp_arr.pop(tmp_int)
         else:  # more than 2 in midfield
             for x in range(int(midfield) - 2):
                 df_m = pandas.DataFrame(m_arr, columns=[
                                         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-                tmp = m_arr[df_m['M'].idxmax()]
+                tmp_int = getTopPlayer(m_arr, df_m['M'].idxmax())
+                tmp = m_arr[tmp_int]
                 formation_arr.append([tmp[0], str(int(defence) + 3 + x), tmp[1], tmp[2], tmp[3], tmp[4],
-                                      tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-                m_arr.pop(df_m['M'].idxmax())
+                                      tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+                m_arr.pop(tmp_int)
 
                 # right winger
             if len(rw_arr) > 0:
                 df_rw = pandas.DataFrame(rw_arr, columns=[
                                          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-                tmp = rw_arr[df_rw['M'].idxmax()]
+                tmp_int = getTopPlayer(rw_arr, df_rw['M'].idxmax())
+                tmp = rw_arr[tmp_int]
                 formation_arr.insert(int(defence) + 1, [tmp[0], str(int(defence) + 2), tmp[1], tmp[2], tmp[3],
-                                                        tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-                rw_arr.pop(df_rw['M'].idxmax())
+                                                        tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+                rw_arr.pop(tmp_int)
             else:
                 df_m = pandas.DataFrame(m_arr, columns=[
                                         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-                tmp = m_arr[df_m['M'].idxmax()]
+                tmp_int = getTopPlayer(m_arr, df_m['M'].idxmax())
+                tmp = m_arr[tmp_int]
                 formation_arr.insert(int(defence) + 1, [tmp[0], str(int(defence) + 2), tmp[1], tmp[2], tmp[3],
-                                                        tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-                m_arr.pop(df_m['M'].idxmax())
+                                                        tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+                m_arr.pop(tmp_int)
 
                 # left winger
             if len(lw_arr) > 0:
                 df_lw = pandas.DataFrame(lw_arr, columns=[
                                          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-                tmp = lw_arr[df_lw['M'].idxmax()]
+                tmp_int = getTopPlayer(lw_arr, df_lw['M'].idxmax())
+                tmp = lw_arr[tmp_int]
                 formation_arr.append([tmp[0], str(int(defence) + int(midfield) + 1), tmp[1], tmp[2], tmp[3],
-                                      tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-                lw_arr.pop(df_lw['M'].idxmax())
+                                      tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+                lw_arr.pop(tmp_int)
             else:
-                df_lw = pandas.DataFrame(m_arr, columns=[
+                df_m = pandas.DataFrame(m_arr, columns=[
                                          'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-                tmp = m_arr[df_lw['M'].idxmax()]
+                tmp_int = getTopPlayer(m_arr, df_m['M'].idxmax())
+                tmp = m_arr[tmp_int]
                 formation_arr.append([tmp[0], str(int(defence) + int(midfield) + 1), tmp[1], tmp[2], tmp[3],
-                                      tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-                m_arr.pop(df_lw['M'].idxmax())
+                                      tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+                m_arr.pop(tmp_int)
 
             # attack
             if len(a_arr) < int(attack):
@@ -276,18 +306,20 @@ def on_btn_generate_clicked():
             for x in range(int(attack)):
                 df_a = pandas.DataFrame(a_tmp_arr, columns=[
                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-                tmp = a_tmp_arr[df_a['M'].idxmax()]
+                tmp_int = getTopPlayer(a_tmp_arr, df_a['M'].idxmax())
+                tmp = a_tmp_arr[tmp_int]
                 formation_arr.append([tmp[0], str(int(defence) + int(midfield) + 2 + x), tmp[1], tmp[2], tmp[3],
-                                      tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-                a_tmp_arr.pop(df_a['M'].idxmax())
+                                      tmp[4], tmp[5], tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+                a_tmp_arr.pop(tmp_int)
 
             # reserves - goalkeeper
             df_gk = pandas.DataFrame(gk_arr, columns=[
                                      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-            tmp = gk_arr[df_gk['M'].idxmax()]
+            tmp_int = getTopPlayer(gk_arr, df_gk['M'].idxmax())
+            tmp = gk_arr[tmp_int]
             formation_arr.append([tmp[0], str(12), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5],
-                                  tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-            gk_arr.pop(df_gk['M'].idxmax())
+                                  tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+            gk_arr.pop(tmp_int)
 
             # reserves - others
             if int(midfield) == 2 and len(a_arr) < int(attack):
@@ -302,20 +334,22 @@ def on_btn_generate_clicked():
             for x in range(4):
                 df_r = pandas.DataFrame(r_arr, columns=[
                                         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-                tmp = r_arr[df_r['M'].idxmax()]
+                tmp_int = getTopPlayer(r_arr, df_r['M'].idxmax())
+                tmp = r_arr[tmp_int]
                 formation_arr.append([tmp[0], str(13 + x), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5],
-                                      tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-                r_arr.pop(df_r['M'].idxmax())
+                                      tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+                r_arr.pop(tmp_int)
 
             # reserves - out of 16
             r_arr = gk_arr + r_arr
             for x in range(len(r_arr)):
                 df_r = pandas.DataFrame(r_arr, columns=[
                                         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'])
-                tmp = r_arr[df_r['M'].idxmax()]
+                tmp_int = getTopPlayer(r_arr, df_r['M'].idxmax())
+                tmp = r_arr[tmp_int]
                 formation_arr.append([tmp[0], str(17 + x), tmp[1], tmp[2], tmp[3], tmp[4], tmp[5],
-                                      tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), tmp[13]])
-                r_arr.pop(df_r['M'].idxmax())
+                                      tmp[6], tmp[7], tmp[8], tmp[9], tmp[10], tmp[11], str(tmp[12]), str(tmp[13])])
+                r_arr.pop(tmp_int)
 
             fillTableCsv()
 
@@ -573,7 +607,14 @@ def fillTableCsv():
             tabela_csv.setItem(row, column, QTableWidgetItem(
                 (formation_arr[row][column])))
 
-    tabela_csv.resizeColumnsToContents()
+    if len(formation_arr) > 0:
+        font = QFont()
+        font.setBold(True)
+        for row_bold in range(0, 16):
+            for column_bold in range(0, 15):
+                tabela_csv.item(row_bold, column_bold).setFont(font)
+
+    tabela_csv.resizeColumnsToContents()                
 
 
 def generateMenuCSV():
@@ -593,17 +634,14 @@ def generateMenuCSV():
                 igralec_old = formation_arr[row]
                 igralec_new = formation_arr[tmp_newid - 1]
 
-                if igralec_old[3] == 'GK' and igralec_new[3] == 'GK':
+                if (igralec_old[3] == 'GK' and igralec_new[3] == 'GK') or (igralec_old[3] != 'GK' and igralec_new[3] != 'GK'):
                     formation_arr[row] = igralec_new
                     formation_arr[tmp_newid - 1] = igralec_old
 
                     formation_arr[row][1] = str(row + 1)
                     formation_arr[tmp_newid - 1][1] = str(tmp_newid)
 
-                    for row in range(0, len(formation_arr)):
-                        for column in range(0, 15):
-                            tabela_csv.setItem(row, column, QTableWidgetItem(
-                                (formation_arr[row][column])))
+                    fillTableCsv()
                 else:
                     alert_popup("Position 1 and 12 is reserved for GK")
 
