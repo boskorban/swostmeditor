@@ -523,6 +523,42 @@ def fillTable():
     tabela.resizeColumnsToContents()
     tabela.resizeRowsToContents()
 
+    int_gk = 0
+    int_rb = 0
+    int_d = 0
+    int_lb = 0
+    int_rw = 0
+    int_m = 0
+    int_lw = 0
+    int_a = 0
+
+    for igralec in full_arr:
+        if igralec[2] == 'GK':
+            int_gk += 1
+        elif igralec[2] == 'RB':
+            int_rb += 1
+        elif igralec[2] == 'D':
+            int_d += 1
+        elif igralec[2] == 'LB':
+            int_lb += 1
+        elif igralec[2] == 'RW':
+            int_rw += 1
+        elif igralec[2] == 'M':
+            int_m += 1            
+        elif igralec[2] == 'LW':
+            int_lw += 1      
+        elif igralec[2] == 'A':
+            int_a += 1
+
+    lbl_GK_number.setText(str(int_gk))
+    lbl_RB_number.setText(str(int_rb))
+    lbl_D_number.setText(str(int_d))
+    lbl_LB_number.setText(str(int_lb))
+    lbl_RW_number.setText(str(int_rw))
+    lbl_M_number.setText(str(int_m))
+    lbl_LW_number.setText(str(int_lw))
+    lbl_A_number.setText(str(int_a))
+
 
 def fillTableCsv():
     global formation_arr
@@ -557,16 +593,19 @@ def generateMenuCSV():
                 igralec_old = formation_arr[row]
                 igralec_new = formation_arr[tmp_newid - 1]
 
-                formation_arr[row] = igralec_new
-                formation_arr[tmp_newid - 1] = igralec_old
+                if igralec_old[3] == 'GK' and igralec_new[3] == 'GK':
+                    formation_arr[row] = igralec_new
+                    formation_arr[tmp_newid - 1] = igralec_old
 
-                formation_arr[row][1] = str(row + 1)
-                formation_arr[tmp_newid - 1][1] = str(tmp_newid)
+                    formation_arr[row][1] = str(row + 1)
+                    formation_arr[tmp_newid - 1][1] = str(tmp_newid)
 
-                for row in range(0, len(formation_arr)):
-                    for column in range(0, 15):
-                        tabela_csv.setItem(row, column, QTableWidgetItem(
-                            (formation_arr[row][column])))
+                    for row in range(0, len(formation_arr)):
+                        for column in range(0, 15):
+                            tabela_csv.setItem(row, column, QTableWidgetItem(
+                                (formation_arr[row][column])))
+                else:
+                    alert_popup("Position 1 and 12 is reserved for GK")
 
 
 def getPlayerID(max_len):
@@ -577,6 +616,70 @@ def getPlayerID(max_len):
         return num
 
 
+def isEnoughPlayersFormation(formation, position):
+    global full_arr
+
+    arr_formation = (ed_formation_tm.currentText()).split("-")
+    defence = int(arr_formation[0])
+    midfield = int(arr_formation[1])
+    attack = int(arr_formation[2])
+
+    int_gk = 0
+    int_rb = 0
+    int_d = 0
+    int_lb = 0
+    int_rw = 0
+    int_m = 0
+    int_lw = 0
+    int_a = 0
+
+    for igralec in full_arr:
+        if igralec[2] == 'GK':
+            int_gk += 1
+        elif igralec[2] == 'RB':
+            int_rb += 1
+        elif igralec[2] == 'D':
+            int_d += 1
+        elif igralec[2] == 'LB':
+            int_lb += 1
+        elif igralec[2] == 'RW':
+            int_rw += 1
+        elif igralec[2] == 'M':
+            int_m += 1            
+        elif igralec[2] == 'LW':
+            int_lw += 1      
+        elif igralec[2] == 'A':
+            int_a += 1
+
+    if position == 'GK':
+        int_gk -= 1
+    elif position == 'RB':
+        int_rb -= 1
+    elif position == 'D':
+        int_d -= 1
+    elif position == 'LB':
+        int_lb -= 1
+    elif position == 'RW':
+        int_rw -= 1
+    elif position == 'M':
+        int_m -= 1
+    elif position == 'LW':
+        int_lw -= 1
+    elif position == 'A':
+        int_a -= 1
+
+    if (int_gk < 2):
+        return "In team must be at least 2 goalkeepers"
+    elif ((int_rb + int_d + int_lb) < defence):
+        return "In team must be at least {} defenders".format(str(defence))
+    elif ((int_rw + int_m + int_lw) < midfield):
+        return "In team must be at least {} midfielders".format(str(midfield))
+    elif (int_a < attack):
+        return "In team must be at least {} attackers".format(str(attack))
+    else: 
+        return ""
+
+
 def generateMenu():
     if tabela.selectionModel().selection().indexes():
         for i in tabela.selectionModel().selection().indexes():
@@ -584,6 +687,8 @@ def generateMenu():
 
         global full_arr
         menu = QMenu()
+
+        str_return = ''
 
         deleAction = menu.addAction("Delete this player")
 
@@ -619,7 +724,13 @@ def generateMenu():
 
         action = menu.exec_(QtGui.QCursor.pos())
         if action == deleAction:
-            full_arr.pop(row)
+            str_return = isEnoughPlayersFormation(ed_formation_tm.currentText(), full_arr[row][2])
+            if len(full_arr) <= 16:
+                alert_popup("In team must be at least 16 players")
+            elif str_return != "":
+                alert_popup(str_return)
+            else:
+                full_arr.pop(row)
         elif action == changePlayerName:
             tmp_name = setName(str(full_arr[row][1]))
             if tmp_name != None:
@@ -821,6 +932,7 @@ layout_4 = QHBoxLayout()
 layout_5 = QHBoxLayout()
 layout_6 = QHBoxLayout()
 layout_7 = QHBoxLayout()
+layout_8 = QGridLayout()
 
 tabs.addTab(tab_TM, "Transfermarkt")
 tabs.addTab(tab_SWOS, "SWOS csv")
@@ -857,15 +969,32 @@ ed_formation_tm.addItem("4-2-4")
 ed_formation_tm.addItem("3-4-3")
 ed_formation_tm.addItem("5-2-3")
 
+lbl_GK = QLabel('Goalkeepers (GK)')
+lbl_GK_number = QLabel('0')
+lbl_RB = QLabel('Right back (RB)')
+lbl_RB_number = QLabel('0')
+lbl_D = QLabel('Defender (D)')
+lbl_D_number = QLabel('0')
+lbl_LB = QLabel('Left back (LB)')
+lbl_LB_number = QLabel('0')
+lbl_RW = QLabel('Right winger (RW)')
+lbl_RW_number = QLabel('0')
+lbl_M = QLabel('Midfielder (M)')
+lbl_M_number = QLabel('0')
+lbl_LW = QLabel('Left winger (LW)')
+lbl_LW_number = QLabel('0')
+lbl_A = QLabel('Attacker (A)')
+lbl_A_number = QLabel('0')
+
 tabela = QTableWidget()
 tabela.setEditTriggers(QTableWidget.NoEditTriggers)
 tabela.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 tabela.customContextMenuRequested.connect(generateMenu)
 
-lbl_league_id_swoes = QLabel('League ID SWOES')
-ed_league_id_swoes = QLineEdit()
-lbl_team_id_swoes = QLabel('Team ID SWOES')
-ed_team_id_swoes = QLineEdit()
+lbl_league_id_swoes = QLabel('League ID SWOS')
+ed_league_id_swoes = QLineEdit('1')
+lbl_team_id_swoes = QLabel('Team ID SWOS')
+ed_team_id_swoes = QLineEdit('1')
 
 tabela_csv = QTableWidget()
 tabela_csv.setEditTriggers(QTableWidget.NoEditTriggers)
@@ -905,6 +1034,22 @@ layout_3.addWidget(lbl_coach_name_tm)
 layout_3.addWidget(ed_coach_name_tm)
 layout_3.addWidget(lbl_formation_tm)
 layout_3.addWidget(ed_formation_tm)
+layout_8.addWidget(lbl_GK, 0, 0)
+layout_8.addWidget(lbl_GK_number, 0, 1, 1, 10)
+layout_8.addWidget(lbl_RB, 1, 0)
+layout_8.addWidget(lbl_RB_number, 1, 1, 1, 10)
+layout_8.addWidget(lbl_D, 2, 0)
+layout_8.addWidget(lbl_D_number, 2, 1, 1, 10)
+layout_8.addWidget(lbl_LB, 3, 0)
+layout_8.addWidget(lbl_LB_number, 3, 1, 1, 10)
+layout_8.addWidget(lbl_RW, 4, 0)
+layout_8.addWidget(lbl_RW_number, 4, 1, 1, 10)
+layout_8.addWidget(lbl_M, 5, 0)
+layout_8.addWidget(lbl_M_number, 5, 1, 1, 10)
+layout_8.addWidget(lbl_LW, 6, 0)
+layout_8.addWidget(lbl_LW_number, 6, 1, 1, 10)
+layout_8.addWidget(lbl_A, 7, 0)
+layout_8.addWidget(lbl_A_number, 7, 1, 1, 10)
 
 # layout - tab SWOS
 layout_4.addWidget(lbl_league_id_swoes)
@@ -927,6 +1072,8 @@ layout_tm.addLayout(layout_3)
 
 layout_tm.addWidget(tabela)
 
+layout_tm.addLayout(layout_8)
+
 layout_tm.addWidget(btn_generate)
 
 # layout - main SWOS
@@ -937,6 +1084,6 @@ layout_swos.addLayout(layout_7)
 
 tab_TM.setLayout(layout_tm)
 tab_SWOS.setLayout(layout_swos)
-tabs.setWindowTitle("SWOS - TM Editor v1.1")
+tabs.setWindowTitle("SWOS - TM Editor v1.2")
 tabs.showMaximized()
 app.exec_()
