@@ -10,18 +10,19 @@ Armandojimenez, Gatifun
 # Changelog
 | Version | Date | Changes |
 |--|--|--|
-| 1.0 | 30.12.2019 | First version - SWOS TM Editor v1.0 |
+| 1.0 | 30.12.2019 | **Release v1.0**<br/>First version SWOS TM Editor v1.0 |
 | 1.0.1 | 31.12.2019 | New data folder structure<br/>Issue  #1 closed |
 | 1.0.2 | 31.12.2019 | Check if URL exists<br/>Removed print's<br/>Other small changes |
-| 1.1 | 3.1.2020 | Start application maximized<br/>Download and show player images<br/>Save image as data in array<br/>Added number of appearances, in squad and goals |
+| 1.1 | 3.1.2020 | **New minor version v1.1**<br/>Start application maximized<br/>Download and show player images<br/>Save image as data in array<br/>Added number of appearances, in squad and goals |
+| 1.2 | 5.1.2020 | **New minor version v1.2**<br/>Summary of players position on the right side (tab Transfermarkt)<br/>In team must be at least 16 players (tab Transfermarkt)<br/>There must be at least 2 GK and minimum field players depending on the formation<br/>Position 1 and 12 is reserved for GK (tab SWOS csv)<br/>Fills Leagues ID SWOS and Team ID SWOS with 1<br/>Sorting by skill and minutes if sum of skills is same<br/>Bold rows for first 16 players in formation (export to csv)<br/>Fixed issues<br/>Other small changes |
 
 # To-Do
 | Version | Planned | Description | Done |
 |--|--|--|--|
-| 1.1.x | Q1 2020 | Summary of players position on the right side (tab Transfermarkt) | ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) |
-| 1.2 | Q1 2020 | In team must be at least 16 players (tab Transfermarkt) | ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) |
-| 1.2 | Q1 2020 | There must be at least 2 GK and minimum field players depending on the formation | ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) |
-| 1.2 | Q1 2020 | Position 1 and 12 is reserved for GK (tab SWOS csv) | ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) |
+| 1.1.x | Q1 2020 | Summary of players position on the right side (tab Transfermarkt) | ![#c5f015](https://placehold.it/15/c5f015/000000?text=+) |
+| 1.2 | Q1 2020 | In team must be at least 16 players (tab Transfermarkt) | ![#c5f015](https://placehold.it/15/c5f015/000000?text=+) |
+| 1.2 | Q1 2020 | There must be at least 2 GK and minimum field players depending on the formation | ![#c5f015](https://placehold.it/15/c5f015/000000?text=+) |
+| 1.2 | Q1 2020 | Position 1 and 12 is reserved for GK (tab SWOS csv) | ![#c5f015](https://placehold.it/15/c5f015/000000?text=+) |
 
 
 # Requirements
@@ -36,16 +37,17 @@ pyqt5
 1. Install Python - https://www.python.org/downloads/
 
 2. Install requirements module
-    ```
+```
     pip install requests
     pip install bs4
     pip install numpy
     pip install pandas
     pip install pyqt5
-
+```
 # How to run
+```
     py gui.py
-
+```
 # How to use it
 1. Search for team on Transfermarkt.com 
 
