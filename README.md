@@ -36,7 +36,7 @@ pyqt5
 # How to install
 1. Install Python - https://www.python.org/downloads/
 
-2. Install requirements module
+2. Install required modules
 ```
     pip install requests
     pip install bs4
