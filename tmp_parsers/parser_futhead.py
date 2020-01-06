@@ -13,7 +13,7 @@ FutHead = requests.get('https://www.futhead.com/20/players/?level=all_nif&bin_pl
 bs = BeautifulSoup(FutHead.text, 'html.parser')
 TotalPages = int(re.sub('\s +', '', str(bs.find('span', {'class': 'font-12 font-bold margin-l-r-10'}).get_text())).split(' ')[1])
 print('Number of pages to be parsed for FIFA players: ' + str(TotalPages))
-for page in range(1, 5): #TotalPages + 1
+for page in range(1, TotalPages + 1):
     FutHead = requests.get('https://www.futhead.com/20/players/?level=all_nif&page={}&bin_platform=pc'.format(str(page)))
     bs = BeautifulSoup(FutHead.text, 'html.parser')
     Stats = bs.findAll('span', {'class': 'player-stat stream-col-60 hidden-md hidden-sm'})
