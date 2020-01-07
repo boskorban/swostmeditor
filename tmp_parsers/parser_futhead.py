@@ -35,14 +35,20 @@ for page in range(1,  TotalPages + 1):
         p.append(tmp_name)
         strong = Information[i].strong.extract()
         try:
-            p.append(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[1].upper().replace("...", "").replace("'", " "))
+            tmp_name = re.sub('\s +', '', str(Information[i].get_text())).split('| ')[1].upper().replace("...", "").replace("'", " ")
+            tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
+            p.append(tmp_name)
         except IndexError:
             p.append('')
         try:
-            p.append(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[2].upper().replace("...", "").replace("'", " "))
+            tmp_name = re.sub('\s +', '', str(Information[i].get_text())).split('| ')[2].upper().replace("...", "").replace("'", " ")
+            tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
+            p.append(tmp_name)
         except IndexError:
             p.append('')
-        p.append(strong.get_text().upper().replace("...", "").replace("'", " "))
+        tmp_name = strong.get_text().upper().replace("...", "").replace("'", " ")
+        tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
+        p.append(tmp_name)
         p.append(Ratings[i].get_text().upper())
         players.append(p)
 
