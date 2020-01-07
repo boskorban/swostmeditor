@@ -6,6 +6,7 @@ from PyQt5.QtGui import *
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from os import walk
+from sqlite3 import Error
 import csv
 import requests
 import sys
@@ -16,6 +17,9 @@ import os
 import webbrowser
 import random
 import math
+import ftplib
+import sqlite3
+
 
 
 def returnSkillArray(n):
@@ -106,6 +110,23 @@ def getTopPlayer(array_player, id_player):
         index_array += 1
 
     return int(return_index)
+
+def getFutheadSwosSkill(position, skill):
+    if skill <= 30:
+        return 1
+    elif skill >= 31 and skill <= 40:
+        return 2
+    elif skill >= 41 and skill <= 50:
+        return 3
+    elif skill >= 51 and skill <= 65:
+        return 4
+    elif skill >= 66 and skill <= 75:
+        return 5
+    elif skill >= 76 and skill <= 80:
+        return 6
+    elif skill >= 81:
+        return 7
+
 
 def alert_popup(text):
     alert = QMessageBox()
@@ -443,8 +464,7 @@ def on_btn_get_data_clicked():
                     cena_swos = getPrice(posi, cena_div)
                     _sum = int(getSkill(posi, cena_div))
 
-                rnd_array = returnSkillArray(_sum)
-
+                imported = 0
                 if posi == 'GK':
                     pa = str(0)
                     ve = str(0)
@@ -454,16 +474,55 @@ def on_btn_get_data_clicked():
                     sp = str(0)
                     fi = str(0)
                 else:
-                    pa = str(rnd_array[0])
-                    ve = str(rnd_array[1])
-                    he = str(rnd_array[2])
-                    ta = str(rnd_array[3])
-                    co = str(rnd_array[4])
-                    sp = str(rnd_array[5])
-                    fi = str(rnd_array[6])
+                    conn = None
+                    try:
+                        conn = sqlite3.connect('data\\players_futhead.db')
+
+                        if conn:
+                            cur = conn.cursor()
+                            cur.execute("SELECT * FROM players where name = '{}' and club = '{}' order by id asc limit 1".format(igralec, ekipa))
+                         
+                            rows = cur.fetchall()
+
+                            if len(rows) > 0:
+                                for row in rows: 
+                                    pa = getFutheadSwosSkill(row[6])
+                                    ve = getFutheadSwosSkill(row[7])
+                                    he = getFutheadSwosSkill(row[8])
+                                    ta = getFutheadSwosSkill(row[9])
+                                    co = getFutheadSwosSkill(row[10])
+                                    sp = getFutheadSwosSkill(row[11])
+                                    fi = getFutheadSwosSkill(row[12])
+                                    _sum = pa + ve + he + ta + co + sp + fi
+                                    cena_swos = getPriceSkill(posi, _sum)
+                                    pa = str(pa)
+                                    ve = str(ve)
+                                    he = str(he)
+                                    ta = str(ta)
+                                    co = str(co)
+                                    sp = str(sp)
+                                    fi = str(fi)
+                                    imported = 1
+                            else:
+                                rnd_array = returnSkillArray(_sum)
+
+                                pa = str(rnd_array[0])
+                                ve = str(rnd_array[1])
+                                he = str(rnd_array[2])
+                                ta = str(rnd_array[3])
+                                co = str(rnd_array[4])
+                                sp = str(rnd_array[5])
+                                fi = str(rnd_array[6])
+                    except Error as e:
+                        print(e)
+                    finally:
+                        if conn:
+                            conn.close()
+
+                
 
                 full_arr.append([getCountry(drzavljanstvo), igralec, posi,
-                                 general_skin, pa, ve, he, ta, co, sp, fi, cena_swos, str(_sum), str(cena_div), str(0), str(0), str(0), str(0), image])
+                                 general_skin, pa, ve, he, ta, co, sp, fi, cena_swos, str(_sum), str(cena_div), str(0), str(0), str(0), str(0), image, imported])
 
         r = requests.get("https://www.transfermarkt.com/{}/leistungsdaten/verein/{}".format(
             ed_team_name.text(), ed_team_id.text()), headers=headers)
@@ -483,7 +542,7 @@ def on_btn_get_data_clicked():
                 squad = zapis.findAll("td")[7].text
                 squad = squad.replace("-", "0")
                 appereance = zapis.findAll("td")[8].text
-                appereance = appereance.replace("-", "0").replace("Not used during this season", "0")
+                appereance = appereance.replace("-", "0").replace("Not used during this season", "0").replace("Not in squad during this season", "0")
                 goals = zapis.findAll("td")[9].text
                 goals = goals.replace("-", "0")
                 minute = zapis.find("td", {"class": "rechts"}).text
@@ -556,6 +615,14 @@ def fillTable():
 
     tabela.resizeColumnsToContents()
     tabela.resizeRowsToContents()
+
+    if len(full_arr) > 0:
+        font = QFont()
+        font.setItalic(True)
+        for row_bold in range(0, len(full_arr)):
+            for column_bold in range(0, 18):
+                if full_arr[row_bold][19] == 0 and full_arr[row_bold][2] != 'GK':
+                    tabela.item(row_bold, column_bold).setFont(font)
 
     int_gk = 0
     int_rb = 0
@@ -953,6 +1020,11 @@ def setName(current):
     if okPressed and text != '':
         return text
 
+
+session = ftplib.FTP('host', 'user', 'pass')
+session.cwd("/public_html/swos_tm_db/")
+session.retrbinary('RETR players_futhead.db', open("data\\players_futhead.db", 'wb').write)                                       
+session.quit()
 
 app = QApplication([])
 app.setStyle('Fusion')

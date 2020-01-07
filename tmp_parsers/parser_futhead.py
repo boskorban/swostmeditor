@@ -1,11 +1,12 @@
+from sqlite3 import Error
+from bs4 import BeautifulSoup
 import re
 import requests
 import pandas as pd
-from bs4 import BeautifulSoup
 import unicodedata
 import sqlite3
-from sqlite3 import Error
 import ftplib
+import os
 
 def cleanText(text):
     tmp_name = text
