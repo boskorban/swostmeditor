@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import unicodedata
 import sqlite3
 from sqlite3 import Error
+import ftplib
 
 # List Intializations
 players = []
@@ -34,14 +35,14 @@ for page in range(1,  TotalPages + 1):
         p.append(tmp_name)
         strong = Information[i].strong.extract()
         try:
-            p.append(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[1].upper())
+            p.append(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[1].upper().replace("...", "").replace("'", " "))
         except IndexError:
             p.append('')
         try:
-            p.append(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[2].upper())
+            p.append(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[2].upper().replace("...", "").replace("'", " "))
         except IndexError:
             p.append('')
-        p.append(strong.get_text().upper())
+        p.append(strong.get_text().upper().replace("...", "").replace("'", " "))
         p.append(Ratings[i].get_text().upper())
         players.append(p)
 
@@ -100,3 +101,13 @@ except Error as e:
 finally:
     if conn:
         conn.close()
+
+if os.path.exists("players_futhead.db"):
+    session = ftplib.FTP('host', 'user', 'pass')
+    file = open('players_futhead.db','rb')                  
+    session.storbinary('STOR /public_html/swos_tm_db/players_futhead.db', file)     
+    file.close()                                    
+    session.quit()
+    os.remove("players_futhead.db")
+else:
+    print("The file does not exist")
