@@ -7,6 +7,7 @@ import unicodedata
 import sqlite3
 import ftplib
 import os
+from zipfile import ZipFile
 
 def cleanText(text):
     tmp_name = text
@@ -17,6 +18,7 @@ def cleanText(text):
 # List Intializations
 players = []
 attributes = []
+extra_attributes = []
 
 # Looping through all pages to retrieve players stats and information
 FutHead = requests.get('https://www.futhead.com/20/players/?level=all_nif&bin_platform=pc')
@@ -31,6 +33,7 @@ for page in range(1,  TotalPages + 1):
     Information = bs.findAll('span', {'class': 'player-club-league-name'})
     Ratings = bs.findAll('span', {'class': re.compile('revision-gradient shadowed font-12')})
     num = len(bs.findAll('li', {'class': 'list-group-item list-group-table-row player-group-item dark-hover'}))
+    url_pages = bs.findAll('a', {'class': 'display-block padding-0'})
 
     # Parsing all players information
     tmp_name = ''
@@ -53,20 +56,39 @@ for page in range(1,  TotalPages + 1):
     # Parsing all players stats
     temp = []
     for stat in Stats:
-        if Stats.index(stat) % 6 == 0:
-            if len(temp) > 0:
-                attributes.append(temp)
-            temp = []
         if stat.find('span', {'class': 'value'}) is None:
             pass
         else:
             temp.append(stat.find('span', {'class': 'value'}).get_text())
+
+        if len(temp) == 6:
+            attributes.append(temp)
+            temp = []
+
+    for url in url_pages:
+    	FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
+    	bs = BeautifulSoup(FutHead_detail.text, 'html.parser')
+    	Extra_Attr = bs.findAll('div', {'class': 'divided-row player-stat-row sm'})
+    	temp = []
+
+    	for attr in Extra_Attr:
+    		tmp_skill = attr.find('span', {'class': 'player-stat-title'}).get_text()
+    		if tmp_skill == 'Finishing':
+    			tmp_value = attr.find('span', {'class': 'player-stat-title'}).findNext('span').get_text()
+    			temp.append(tmp_value)
+    		if tmp_skill == 'Heading':
+    			tmp_value = attr.find('span', {'class': 'player-stat-title'}).findNext('span').get_text()
+    			temp.append(tmp_value)
+    	extra_attributes.append(temp)
+
+    	print('URL ' + url['href'] + ' is done')
+
     print('Page ' + str(page) + ' is done!')
 
 # Inserting data into its specific table
-#tmp = 'NAME;CLUB;LEAGUE;POSITION;RATING;PACE;SHOOTING;PASSING;DRIBBLING;DEFENDING;PHYSICAL\n'
-#for player, attribute in zip(players, attributes):
-#    tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{}\n".format(player[0], player[1], player[2], player[3], player[4], attribute[0], attribute[1], attribute[2], attribute[3], attribute[4], attribute[5])
+#tmp = 'NAME;CLUB;LEAGUE;POSITION;RATING;PACE;SHOOTING;PASSING;DRIBBLING;DEFENDING;PHYSICAL;FINISHING;HEADING\n'
+#for i in range(len(players)):
+#    tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
 
 #with open("output.csv", "w") as text_file:
 #    text_file.write(tmp)
@@ -83,7 +105,9 @@ sql_create_table = """CREATE TABLE IF NOT EXISTS players (
                                     passing integer NOT NULL,
                                     dribbling integer NOT NULL,
                                     defending integer NOT NULL,
-                                    physical integer NOT NULL
+                                    physical integer NOT NULL,
+                                    finishing integer NOT NULL,
+                                    heading integer NOT NULL
                                 );"""
 
 
@@ -95,23 +119,28 @@ try:
         c = conn.cursor()
         c.execute(sql_create_table)
 
-        for player, attribute in zip(players, attributes):
-            sql = "INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{})".format(player[0], player[1], player[2], player[3], player[4], attribute[0], attribute[1], attribute[2], attribute[3], attribute[4], attribute[5])
+        for i in range(len(players)):
+            sql = "INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{})".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
             cur = conn.cursor()
             cur.execute(sql)
         conn.commit()
 except Error as e:
-    print(e)
+    print("Error: " + e)
 finally:
     if conn:
         conn.close()
 
 if os.path.exists("players_futhead.db"):
+    with ZipFile('players_futhead.zip','w') as zip: 
+        zip.write('players_futhead.db') 
+
     session = ftplib.FTP('host', 'user', 'pass')
-    file = open('players_futhead.db','rb')                  
-    session.storbinary('STOR /public_html/swos_tm_db/players_futhead.db', file)     
+    file = open('players_futhead.zip','rb')                  
+    session.storbinary('STOR /public_html/swos_tm_db/players_futhead.zip', file)     
     file.close()                                    
     session.quit()
+
     os.remove("players_futhead.db")
+    os.remove("players_futhead.zip")
 else:
     print("The file does not exist")

@@ -19,7 +19,7 @@ import random
 import math
 import ftplib
 import sqlite3
-
+from zipfile import ZipFile
 
 
 def returnSkillArray(n):
@@ -111,7 +111,7 @@ def getTopPlayer(array_player, id_player):
 
     return int(return_index)
 
-def getFutheadSwosSkill(position, skill):
+def getFutheadSwosSkill(skill):
     if skill <= 30:
         return 1
     elif skill >= 31 and skill <= 40:
@@ -1020,11 +1020,20 @@ def setName(current):
     if okPressed and text != '':
         return text
 
+headers = {"User-Agent": "Mozilla/5.0"}
+r = requests.get("https://boskorban.si/swos_tm_db/players_futhead.zip", headers=headers)
 
-session = ftplib.FTP('host', 'user', 'pass')
-session.cwd("/public_html/swos_tm_db/")
-session.retrbinary('RETR players_futhead.db', open("data\\players_futhead.db", 'wb').write)                                       
-session.quit()
+with open('data\\players_futhead.zip', 'wb') as f:
+    f.write(r.content)
+
+if os.path.exists("data\\players_futhead.db"):
+    os.remove("data\\players_futhead.db")
+
+with ZipFile("data\\players_futhead.zip", 'r') as zip:
+    zip.extractall()
+
+os.rename('players_futhead.db', 'data\\players_futhead.db')
+os.remove('data\\players_futhead.zip')
 
 app = QApplication([])
 app.setStyle('Fusion')
