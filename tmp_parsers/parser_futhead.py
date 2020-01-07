@@ -7,6 +7,12 @@ import sqlite3
 from sqlite3 import Error
 import ftplib
 
+def cleanText(text):
+    tmp_name = text
+    tmp_name = tmp_name.upper().replace("...", "").replace("'", " ")
+    tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
+    return tmp_name
+
 # List Intializations
 players = []
 attributes = []
@@ -29,27 +35,18 @@ for page in range(1,  TotalPages + 1):
     tmp_name = ''
     for i in range(num):
         p = []
-        tmp_name = Names[i].get_text().upper()
-        tmp_name = tmp_name.replace("...", "").replace("'", " ")
-        tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
-        p.append(tmp_name)
+        p.append(cleanText(Names[i].get_text()))
         strong = Information[i].strong.extract()
         try:
-            tmp_name = re.sub('\s +', '', str(Information[i].get_text())).split('| ')[1].upper().replace("...", "").replace("'", " ")
-            tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
-            p.append(tmp_name)
+            p.append(cleanText(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[1]))
         except IndexError:
             p.append('')
         try:
-            tmp_name = re.sub('\s +', '', str(Information[i].get_text())).split('| ')[2].upper().replace("...", "").replace("'", " ")
-            tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
-            p.append(tmp_name)
+            p.append(cleanText(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[2]))
         except IndexError:
             p.append('')
-        tmp_name = strong.get_text().upper().replace("...", "").replace("'", " ")
-        tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
-        p.append(tmp_name)
-        p.append(Ratings[i].get_text().upper())
+        p.append(cleanText(strong.get_text()))
+        p.append(Ratings[i].get_text())
         players.append(p)
 
     # Parsing all players stats
