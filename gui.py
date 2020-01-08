@@ -480,19 +480,19 @@ def on_btn_get_data_clicked():
 
                         if conn:
                             cur = conn.cursor()
-                            cur.execute("SELECT * FROM players where name = '{}' and club = '{}' order by id asc limit 1".format(igralec, ekipa))
+                            cur.execute("SELECT name, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading FROM players where name = '{}' and club = '{}' order by id asc limit 1".format(igralec, ekipa))
                          
                             rows = cur.fetchall()
 
                             if len(rows) > 0:
                                 for row in rows: 
-                                    pa = getFutheadSwosSkill(row[6])
-                                    ve = getFutheadSwosSkill(row[7])
-                                    he = getFutheadSwosSkill(row[8])
-                                    ta = getFutheadSwosSkill(row[9])
-                                    co = getFutheadSwosSkill(row[10])
-                                    sp = getFutheadSwosSkill(row[11])
-                                    fi = getFutheadSwosSkill(row[12])
+                                    pa = getFutheadSwosSkill(row[5])
+                                    ve = getFutheadSwosSkill(row[4])
+                                    he = getFutheadSwosSkill(row[10])
+                                    ta = getFutheadSwosSkill(row[7])
+                                    co = getFutheadSwosSkill(row[6])
+                                    sp = getFutheadSwosSkill(row[3])
+                                    fi = getFutheadSwosSkill(row[9])
                                     _sum = pa + ve + he + ta + co + sp + fi
                                     cena_swos = getPriceSkill(posi, _sum)
                                     pa = str(pa)
