@@ -111,21 +111,51 @@ def getTopPlayer(array_player, id_player):
 
     return int(return_index)
 
+def getFutheadSwosSkillArray(rating, sp, ve, pa, co, ta, fi, he):
+    rtn_array = [sp, ve, pa, co, ta, fi, he]
+
+    sum_swos = sp + ve + pa + co + ta + fi + he
+    tmp_swos = int(rating / 2)
+    difference_swos = tmp_swos - sum_swos
+
+    arr_int = 0
+    while difference_swos != 0:
+        if arr_int > 6:
+            arr_int = 0
+
+        if rtn_array[arr_int] == 7:
+            arr_int += 1
+            continue
+
+        if difference_swos > 0:
+            rtn_array[arr_int] += 1
+            difference_swos -= 1
+            arr_int += 1
+        elif difference_swos < 0:
+            rtn_array[arr_int] -= 1
+            difference_swos += 1
+            arr_int += 1
+
+    return rtn_array     
+
 def getFutheadSwosSkill(skill):
-    if skill <= 30:
+    if skill <= 13:
         return 1
-    elif skill >= 31 and skill <= 40:
+    elif skill >= 14 and skill <= 27:
         return 2
-    elif skill >= 41 and skill <= 50:
+    elif skill >= 28 and skill <= 41:
         return 3
-    elif skill >= 51 and skill <= 65:
+    elif skill >= 42 and skill <= 56:
         return 4
-    elif skill >= 66 and skill <= 75:
+    elif skill >= 57 and skill <= 71:
         return 5
-    elif skill >= 76 and skill <= 80:
+    elif skill >= 72 and skill <= 86:
         return 6
-    elif skill >= 81:
+    elif skill >= 87:
         return 7
+
+def getPriceFuthead(rating):
+    return "15M"
 
 
 def alert_popup(text):
@@ -480,28 +510,35 @@ def on_btn_get_data_clicked():
 
                         if conn:
                             cur = conn.cursor()
-                            cur.execute("SELECT name, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading FROM players where name = '{}' and club = '{}' order by id asc limit 1".format(igralec, ekipa))
+                            cur.execute("SELECT * FROM players where name = '{}' and club = '{}' order by id asc limit 1".format(igralec, ekipa))
                          
                             rows = cur.fetchall()
 
                             if len(rows) > 0:
                                 for row in rows: 
-                                    pa = getFutheadSwosSkill(row[5])
-                                    ve = getFutheadSwosSkill(row[4])
-                                    he = getFutheadSwosSkill(row[10])
-                                    ta = getFutheadSwosSkill(row[7])
-                                    co = getFutheadSwosSkill(row[6])
-                                    sp = getFutheadSwosSkill(row[3])
-                                    fi = getFutheadSwosSkill(row[9])
-                                    _sum = pa + ve + he + ta + co + sp + fi
-                                    cena_swos = getPriceSkill(posi, _sum)
-                                    pa = str(pa)
-                                    ve = str(ve)
-                                    he = str(he)
-                                    ta = str(ta)
-                                    co = str(co)
-                                    sp = str(sp)
-                                    fi = str(fi)
+                                    rating = row[5]
+                                    sp = getFutheadSwosSkill(row[6])
+                                    ve = getFutheadSwosSkill(row[7])
+                                    pa = getFutheadSwosSkill(row[8])
+                                    co = getFutheadSwosSkill(row[9])
+                                    ta = getFutheadSwosSkill(row[10])
+                                    fi = getFutheadSwosSkill(row[12])
+                                    he = getFutheadSwosSkill(row[13])
+
+                                    fut_array = []
+                                    fut_array = getFutheadSwosSkillArray(rating, sp, ve, pa, co, ta, fi, he)
+
+                                    _sum = fut_array[0] + fut_array[1] + fut_array[2] + fut_array[3] + fut_array[4] + fut_array[5] + fut_array[6]
+                                    cena_swos = getPriceFuthead(rating)
+
+                                    sp = str(fut_array[0])
+                                    ve = str(fut_array[1])
+                                    pa = str(fut_array[2])
+                                    co = str(fut_array[3])
+                                    ta = str(fut_array[4])
+                                    fi = str(fut_array[5])
+                                    he = str(fut_array[6])
+
                                     imported = 1
                             else:
                                 rnd_array = returnSkillArray(_sum)
