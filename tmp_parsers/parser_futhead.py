@@ -89,9 +89,12 @@ for page in range(1,  TotalPages + 1):
 tmp = 'NAME;CLUB;LEAGUE;POSITION;RATING;PACE;SHOOTING;PASSING;DRIBBLING;DEFENDING;PHYSICAL;FINISHING;HEADING\n'
 tmp_sql = ''
 for i in range(len(players)):
-    print("INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{});\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1]))
-    tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
-    tmp_sql = tmp_sql + "INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{});\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
+    try:
+        print("INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{});\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1]))
+        tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
+        tmp_sql = tmp_sql + "INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{});\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
+    except Error as e:
+        print("Error: " + e + " - " + str(i))
 
 with open("players_futhead.csv", "w") as text_file:
     text_file.write(tmp)
@@ -124,11 +127,7 @@ try:
     if conn:
         c = conn.cursor()
         c.execute(sql_create_table)
-
-        for i in range(len(players)):
-        	sql = "INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{});".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
-        	cur = conn.cursor()
-        	cur.execute(sql)
+        c.executescript(tmp_sql)
         conn.commit()
 except Error as e:
     print("Error: " + e)
