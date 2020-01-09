@@ -147,6 +147,6 @@ if os.path.exists("players_futhead.db"):
     file.close()                                    
     session.quit()
 
-    os.remove("players_futhead.db")
+    os.remove("players_futhead.zip")
 else:
     print("The file does not exist")
