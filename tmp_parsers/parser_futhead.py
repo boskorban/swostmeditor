@@ -86,12 +86,19 @@ for page in range(1,  TotalPages + 1):
     print('Page ' + str(page) + ' is done!')
 
 # Inserting data into its specific table
-#tmp = 'NAME;CLUB;LEAGUE;POSITION;RATING;PACE;SHOOTING;PASSING;DRIBBLING;DEFENDING;PHYSICAL;FINISHING;HEADING\n'
-#for i in range(len(players)):
-#    tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
+tmp = 'NAME;CLUB;LEAGUE;POSITION;RATING;PACE;SHOOTING;PASSING;DRIBBLING;DEFENDING;PHYSICAL;FINISHING;HEADING\n'
+for i in range(len(players)):
+    tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
 
-#with open("output.csv", "w") as text_file:
-#    text_file.write(tmp)
+with open("output.csv", "w") as text_file:
+    text_file.write(tmp)
+
+tmp = ''
+for i in range(len(players)):
+    tmp = tmp + "INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{});\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
+
+with open("output.sql", "w") as text_file:
+    text_file.write(tmp)
 
 sql_create_table = """CREATE TABLE IF NOT EXISTS players (
                                     id integer PRIMARY KEY,
@@ -120,9 +127,9 @@ try:
         c.execute(sql_create_table)
 
         for i in range(len(players)):
-            sql = "INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{})".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
-            cur = conn.cursor()
-            cur.execute(sql)
+        	sql = "INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{});".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
+        	cur = conn.cursor()
+        	cur.execute(sql)
         conn.commit()
 except Error as e:
     print("Error: " + e)
@@ -141,6 +148,5 @@ if os.path.exists("players_futhead.db"):
     session.quit()
 
     os.remove("players_futhead.db")
-    os.remove("players_futhead.zip")
 else:
     print("The file does not exist")
