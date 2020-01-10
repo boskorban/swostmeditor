@@ -70,12 +70,11 @@ for page in range(1, TotalPages + 1):
 
     for url in url_pages:
         temp = [0, 0]
-        while int(temp[0]) == 0 or int(temp[1]) == 0:
+        while int(temp[0]) == 0 and int(temp[1]) == 0:
             FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
             bs = BeautifulSoup(FutHead_detail.text, 'html.parser')
             Extra_Attr = bs.findAll('div', {'class': 'divided-row player-stat-row sm'})
             
-
             for attr in Extra_Attr:
                 tmp_skill = attr.find('span', {'class': 'player-stat-title'}).get_text()
                 if tmp_skill == 'Finishing':
@@ -85,7 +84,7 @@ for page in range(1, TotalPages + 1):
                     tmp_value = attr.find('span', {'class': 'player-stat-title'}).findNext('span').get_text()
                     temp[1] = tmp_value
 
-            if int(temp[0]) > 0 and int(temp[1]) > 0:
+            if int(temp[0]) > 0 or int(temp[1]) > 0:
                 extra_attributes.append(temp)
 
         print('URL ' + url['href'] + ' is done')
