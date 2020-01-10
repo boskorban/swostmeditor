@@ -69,20 +69,24 @@ for page in range(1, TotalPages + 1):
             i = 0
 
     for url in url_pages:
-    	FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
-    	bs = BeautifulSoup(FutHead_detail.text, 'html.parser')
-    	Extra_Attr = bs.findAll('div', {'class': 'divided-row player-stat-row sm'})
-    	temp = [0, 0]
+        temp = [0, 0]
+        while temp[0] == 0 and temp[1] == 0:
+        	FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
+        	bs = BeautifulSoup(FutHead_detail.text, 'html.parser')
+        	Extra_Attr = bs.findAll('div', {'class': 'divided-row player-stat-row sm'})
+        	
 
-    	for attr in Extra_Attr:
-    		tmp_skill = attr.find('span', {'class': 'player-stat-title'}).get_text()
-    		if tmp_skill == 'Finishing':
-    			tmp_value = attr.find('span', {'class': 'player-stat-title'}).findNext('span').get_text()
-    			temp[0] = tmp_value
-    		if tmp_skill == 'Heading':
-    			tmp_value = attr.find('span', {'class': 'player-stat-title'}).findNext('span').get_text()
-    			temp[1] = tmp_value
-    	extra_attributes.append(temp)
+        	for attr in Extra_Attr:
+        		tmp_skill = attr.find('span', {'class': 'player-stat-title'}).get_text()
+        		if tmp_skill == 'Finishing':
+        			tmp_value = attr.find('span', {'class': 'player-stat-title'}).findNext('span').get_text()
+        			temp[0] = tmp_value
+        		if tmp_skill == 'Heading':
+        			tmp_value = attr.find('span', {'class': 'player-stat-title'}).findNext('span').get_text()
+        			temp[1] = tmp_value
+                    
+            if temp[0] > 0 and temp[1] > 0
+        	   extra_attributes.append(temp)
 
     	print('URL ' + url['href'] + ' is done')
 
