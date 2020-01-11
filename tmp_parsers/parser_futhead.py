@@ -28,12 +28,12 @@ extra_attributes = []
 
 # Looping through all pages to retrieve players stats and information
 for tier in tiers:
-    FutHead = requests.get('https://www.futhead.com/20/players/?level={}&bin_platform=pc'.format(tier))
+    FutHead = requests.get('https://www.futhead.com/20/players/?level={}_nif&bin_platform=pc'.format(tier))
     bs = BeautifulSoup(FutHead.text, 'html.parser')
     TotalPages = int(re.sub('\s +', '', str(bs.find('span', {'class': 'font-12 font-bold margin-l-r-10'}).get_text())).split(' ')[1])
     print('Number of pages to be parsed for FIFA {} players: {}'.format(tier, str(TotalPages)))
     for page in range(1, TotalPages + 1):
-        FutHead = requests.get('https://www.futhead.com/20/players/?level={}&page={}&bin_platform=pc'.format(tier, str(page)))
+        FutHead = requests.get('https://www.futhead.com/20/players/?level={}_nif&page={}&bin_platform=pc'.format(tier, str(page)))
         bs = BeautifulSoup(FutHead.text, 'html.parser')
         Stats = bs.findAll('span', {'class': 'player-stat stream-col-60 hidden-md hidden-sm'})
         Names = bs.findAll('span', {'class': 'player-name'})
