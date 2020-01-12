@@ -96,7 +96,9 @@ for tier in tiers:
 
             print('URL ' + url['href'] + ' is done!')
 
-        print('Page ' + str(page) + ' is done!')
+        print('Page {} ({}) is done!'.format(str(page), tier))
+
+print("Preparing data")
 
 # Inserting data into its specific table
 tmp = 'NAME;CLUB;LEAGUE;POSITION;RATING;PACE;SHOOTING;PASSING;DRIBBLING;DEFENDING;PHYSICAL;FINISHING;HEADING\n'
@@ -108,11 +110,17 @@ for i in range(len(players)):
     except Error as e:
         print("Error: " + e + " - " + str(i))
 
+print("Saving files")
+
 with open("players_futhead.csv", "w") as text_file:
     text_file.write(tmp)
     
 with open("players_futhead.sql", "w") as text_file:
     text_file.write(tmp_sql)
+
+print("Files saved")
+
+print("Preparing database")
 
 sql_create_table = """CREATE TABLE IF NOT EXISTS players (
                                     id integer PRIMARY KEY,
@@ -131,7 +139,6 @@ sql_create_table = """CREATE TABLE IF NOT EXISTS players (
                                     heading integer NOT NULL
                                 );"""
 
-
 conn = None
 try:
     conn = sqlite3.connect('players_futhead.db')
@@ -147,6 +154,10 @@ finally:
     if conn:
         conn.close()
 
+print("Databased saved")
+
+print("Preparing for FTP upload")
+
 if os.path.exists("players_futhead.db"):
     with ZipFile('players_futhead.zip','w') as zip: 
         zip.write('players_futhead.db') 
@@ -160,3 +171,5 @@ if os.path.exists("players_futhead.db"):
     os.remove("players_futhead.zip")
 else:
     print("The file does not exist")
+
+print("FTP upload completed")
