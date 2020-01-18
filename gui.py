@@ -447,6 +447,9 @@ def on_btn_get_data_clicked():
         while len(formation_arr) > 0:
             formation_arr.pop(0)
 
+        qm = QMessageBox()
+        ret = qm.question(qm, '', "Fill data with skills from Futhead?", qm.Yes | qm.No)
+
         headers = {"User-Agent": "Mozilla/5.0"}
         r = requests.get("https://www.transfermarkt.com/{}/startseite/verein/{}".format(
             ed_team_name.text(), ed_team_id.text()), headers=headers)
@@ -509,57 +512,69 @@ def on_btn_get_data_clicked():
                     sp = str(0)
                     fi = str(0)
                 else:
-                    conn = None
-                    try:
-                        conn = sqlite3.connect('data\\players_futhead.db')
+                    if ret == qm.No:
+                        imported = 1
+                        rnd_array = returnSkillArray(_sum)
 
-                        if conn:
-                            cur = conn.cursor()
-                            cur.execute("SELECT * FROM players where name = '{}' and club = '{}' order by id asc limit 1".format(igralec, ekipa))
-                         
-                            rows = cur.fetchall()
+                        pa = str(rnd_array[0])
+                        ve  = str(rnd_array[1])
+                        he = str(rnd_array[2])
+                        ta = str(rnd_array[3])
+                        co = str(rnd_array[4])
+                        sp = str(rnd_array[5])
+                        fi = str(rnd_array[6])
+                    else:
+                        conn = None
+                        try:
+                            conn = sqlite3.connect('data\\players_futhead.db')
 
-                            if len(rows) > 0:
-                                for row in rows: 
-                                    rating = row[5]
-                                    sp = getFutheadSwosSkill(row[6])
-                                    ve = getFutheadSwosSkill(row[7])
-                                    pa = getFutheadSwosSkill(row[8])
-                                    co = getFutheadSwosSkill(row[9])
-                                    ta = getFutheadSwosSkill(row[10])
-                                    fi = getFutheadSwosSkill(row[12])
-                                    he = getFutheadSwosSkill(row[13])
+                            if conn:
+                                cur = conn.cursor()
+                                cur.execute("SELECT * FROM players where name = '{}' and club = '{}' order by id asc limit 1".format(igralec, ekipa))
+                             
+                                rows = cur.fetchall()
 
-                                    fut_array = []
-                                    fut_array = getFutheadSwosSkillArray(rating, sp, ve, pa, co, ta, fi, he)
+                                if len(rows) > 0:
+                                    for row in rows: 
+                                        rating = row[5]
+                                        sp = getFutheadSwosSkill(row[6])
+                                        ve = getFutheadSwosSkill(row[7])
+                                        pa = getFutheadSwosSkill(row[8])
+                                        co = getFutheadSwosSkill(row[9])
+                                        ta = getFutheadSwosSkill(row[10])
+                                        fi = getFutheadSwosSkill(row[12])
+                                        he = getFutheadSwosSkill(row[13])
 
-                                    _sum = fut_array[0] + fut_array[1] + fut_array[2] + fut_array[3] + fut_array[4] + fut_array[5] + fut_array[6]
-                                    cena_swos = getPriceFuthead(_sum)
+                                        fut_array = []
+                                        fut_array = getFutheadSwosSkillArray(rating, sp, ve, pa, co, ta, fi, he)
 
-                                    sp = str(fut_array[0])
-                                    ve = str(fut_array[1])
-                                    pa = str(fut_array[2])
-                                    co = str(fut_array[3])
-                                    ta = str(fut_array[4])
-                                    fi = str(fut_array[5])
-                                    he = str(fut_array[6])
+                                        _sum = fut_array[0] + fut_array[1] + fut_array[2] + fut_array[3] + fut_array[4] + fut_array[5] + fut_array[6]
+                                        cena_swos = getPriceFuthead(_sum)
 
-                                    imported = 1
-                            else:
-                                rnd_array = returnSkillArray(_sum)
+                                        sp = str(fut_array[0])
+                                        ve = str(fut_array[1])
+                                        pa = str(fut_array[2])
+                                        co = str(fut_array[3])
+                                        ta = str(fut_array[4])
+                                        fi = str(fut_array[5])
+                                        he = str(fut_array[6])
 
-                                pa = str(rnd_array[0])
-                                ve = str(rnd_array[1])
-                                he = str(rnd_array[2])
-                                ta = str(rnd_array[3])
-                                co = str(rnd_array[4])
-                                sp = str(rnd_array[5])
-                                fi = str(rnd_array[6])
-                    except Error as e:
-                        print(e)
-                    finally:
-                        if conn:
-                            conn.close()
+                                        imported = 1
+                                else:
+                                    rnd_array = returnSkillArray(_sum)
+
+                                    pa = str(rnd_array[0])
+                                    ve = str(rnd_array[1])
+                                    he = str(rnd_array[2])
+                                    ta = str(rnd_array[3])
+                                    co = str(rnd_array[4])
+                                    sp = str(rnd_array[5])
+                                    fi = str(rnd_array[6])
+                        except Error as e:
+                            print(e)
+                        finally:
+                            if conn:
+                                conn.close()
 
                 
 
