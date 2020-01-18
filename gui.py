@@ -96,6 +96,14 @@ def getSkill(position, price):
             if float(row[2]) <= float(price) and float(row[1]) >= float(price):
                 return row[3]
 
+
+def getPriceFuthead(rating):
+    with open('data\\fut_swos.csv', "r") as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=';')
+        for row in csv_reader:
+            if int(row[0]) == int(rating):
+                return row[1]
+
 # function to watch same sum of skills and more minutes
 def getTopPlayer(array_player, id_player):
     index_array = 0
@@ -153,9 +161,6 @@ def getFutheadSwosSkill(skill):
         return 6
     elif skill >= 87:
         return 7
-
-def getPriceFuthead(rating):
-    return "15M"
 
 
 def alert_popup(text):
@@ -529,7 +534,7 @@ def on_btn_get_data_clicked():
                                     fut_array = getFutheadSwosSkillArray(rating, sp, ve, pa, co, ta, fi, he)
 
                                     _sum = fut_array[0] + fut_array[1] + fut_array[2] + fut_array[3] + fut_array[4] + fut_array[5] + fut_array[6]
-                                    cena_swos = getPriceFuthead(rating)
+                                    cena_swos = getPriceFuthead(_sum)
 
                                     sp = str(fut_array[0])
                                     ve = str(fut_array[1])
