@@ -70,6 +70,7 @@ pyqt5
 | 1.1 | 3.1.2020 | **New minor version v1.1**<br/>Start application maximized<br/>Download and show player images<br/>Save image as data in array<br/>Added number of appearances, in squad and goals |
 | 1.2 | 5.1.2020 | **New minor version v1.2**<br/>Summary of players position on the right side (tab Transfermarkt)<br/>In team must be at least 16 players (tab Transfermarkt)<br/>There must be at least 2 GK and minimum field players depending on the formation<br/>Position 1 and 12 is reserved for GK (tab SWOS csv)<br/>Fills Leagues ID SWOS and Team ID SWOS with 1<br/>Sorting by skill and minutes if sum of skills is same<br/>Bold rows for first 16 players in formation (export to csv)<br/>Fixed issues<br/>Other small changes |
 | 1.3 | 20.1.2020 | **New minor version v1.3**<br/>Importing data from Futhead for skills calculation<br/>Downloading SQLite database with Futhead data<br/>Futhead parser (extra .py file)<br/>Fixed issues<br/>Other small changes |
+| 1.3.1 | 10.2.2020 | URL correction to download Futhead skills database |
 
 # To-Do
 | Version | Planned | Description | Done |
