@@ -1078,7 +1078,7 @@ def setName(current):
         return text
 
 headers = {"User-Agent": "Mozilla/5.0"}
-r = requests.get("https://swos.boskorban.si/players_futhead.zip", headers=headers)
+r = requests.get("http://swos.boskorban.si/players_futhead.zip", headers=headers)
 
 with open('data\\players_futhead.zip', 'wb') as f:
     f.write(r.content)
