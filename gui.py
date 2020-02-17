@@ -63,6 +63,7 @@ def getCountry(drzava):
         for row in csv_reader:
             if row[0] == drzava:
                 return row[1]
+    return "XYZ"
 
 
 def getPosition(position):
@@ -234,6 +235,20 @@ def on_btn_generate_clicked():
             elif igralec[2] == 'A':
                 a_arr.append([igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6],
                               igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], int(igralec[12]), int(igralec[14])])
+
+        # control number of players
+        if len(gk_arr) < 2:
+        	alert_popup("There is no enough GK")
+        	return
+        if (len(rb_arr) + len(lb_arr) + len(d_arr)) < int(defence):
+        	alert_popup("There is no enough defenders")
+        	return
+        if (len(m_arr) + len(rw_arr) + len(lw_arr)) < int(midfield):
+        	alert_popup("There is no enough midfielders")
+        	return
+        if (len(rw_arr) + len(lw_arr) + len(a_arr)) < int(attack):
+        	alert_popup("There is no enough attackers")
+        	return
 
         tmp_int = 0
 
@@ -413,9 +428,9 @@ def on_btn_generate_clicked():
 
 
 def on_btn_get_data_clicked():
-    if ed_team_url.text() != '':
+    if ed_team_url.text().strip() != '':
         headers = {"User-Agent": "Mozilla/5.0"}
-        r = requests.get(ed_team_url.text(), headers=headers)
+        r = requests.get(ed_team_url.text().strip(), headers=headers)
         if r.status_code != 200:
             alert_popup("URL does not exists")
             return None
@@ -424,7 +439,7 @@ def on_btn_get_data_clicked():
         tmp_url_team_name = ''
         tmp_url_team_id = ''
 
-        tmp_url = ed_team_url.text()
+        tmp_url = ed_team_url.text().strip()
         tmp_url = tmp_url.replace("https://", "").replace("http://", "")
 
         tmp_url_arr = tmp_url.split('/')
@@ -856,6 +871,8 @@ def generateMenu():
 
         changePlayerName = menu.addAction("Change player name")
 
+        changePlayerCountry = menu.addAction("Change player country")
+
         changePositionAction = menu.addAction(
             "Change players position (popup)")
         changePositionMenu = menu.addMenu("Change players position to")
@@ -897,6 +914,10 @@ def generateMenu():
             tmp_name = setName(str(full_arr[row][1]))
             if tmp_name != None:
                 full_arr[row][1] = tmp_name
+        elif action == changePlayerCountry:
+            tmp_country = setCountry(str(full_arr[row][0]))
+            if tmp_country != None:
+                full_arr[row][0] = tmp_country
         elif action == changeSkinAction:
             tmp_skin = setSkin()
             if tmp_skin != None:
@@ -1069,6 +1090,12 @@ def setSkillEach(current, text):
     if ok:
         return str(num)
 
+def setCountry(current):
+    text, okPressed = QInputDialog.getText(
+        tab_TM, "Player country", "Enter new country:", QLineEdit.Normal, current)
+
+    if okPressed and text != '':
+        return text
 
 def setName(current):
     text, okPressed = QInputDialog.getText(
