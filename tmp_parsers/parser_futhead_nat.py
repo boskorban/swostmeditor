@@ -4,12 +4,6 @@ import requests
 import pandas as pd
 import unicodedata
 
-def cleanText(text):
-    tmp_name = text
-    tmp_name = tmp_name.upper().replace("...", "").replace("'", " ")
-    tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
-    return tmp_name
-
 # List Intializations
 tiers = [
     'gold',
@@ -41,17 +35,17 @@ for tier in tiers:
         tmp_name = ''
         for i in range(num):
             p = ['', '', '', 0, 0]
-            p[0] = cleanText(Names[i].get_text())
+            p[0] = Names[i].get_text()
             strong = Information[i].strong.extract()
             try:
-                p[1] = cleanText(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[1])
+                p[1] = re.sub('\s +', '', str(Information[i].get_text())).split('| ')[1]
             except IndexError:
                 p[1] = ''
             try:
-                p[2] = cleanText(re.sub('\s +', '', str(Information[i].get_text())).split('| ')[2])
+                p[2] = re.sub('\s +', '', str(Information[i].get_text())).split('| ')[2]
             except IndexError:
                 p[2] = ''
-            p[3] = cleanText(strong.get_text())
+            p[3] = strong.get_text()
             p[4] = Ratings[i].get_text()
             players.append(p)
             

@@ -532,7 +532,7 @@ def on_btn_get_data_clicked():
                         rnd_array = returnSkillArray(_sum)
 
                         pa = str(rnd_array[0])
-                        ve  = str(rnd_array[1])
+                        ve = str(rnd_array[1])
                         he = str(rnd_array[2])
                         ta = str(rnd_array[3])
                         co = str(rnd_array[4])

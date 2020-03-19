@@ -11,7 +11,7 @@ from zipfile import ZipFile
 
 def cleanText(text):
     tmp_name = text
-    tmp_name = tmp_name.upper().replace("...", "").replace("'", " ")
+    tmp_name = tmp_name.upper().replace("...", "").replace("'", "''")
     tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
     return tmp_name
 
