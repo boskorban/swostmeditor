@@ -1,9 +1,14 @@
-from bs4 import BeautifulSoup
 import re
 import requests
 import pandas as pd
 import unicodedata
 import sys
+import smtplib
+from bs4 import BeautifulSoup
+from os.path import basename
+from email.mime.application import MIMEApplication
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 year = sys.argv[1]
 
@@ -112,4 +117,42 @@ print("Saving files")
 with open("players_futhead_{}.csv".format(year), "w", encoding="utf-8") as text_file:
     text_file.write(tmp)
 
-print("Files saved")
+print("File saved")
+
+print("Preparing email")
+
+port = 587
+smtp_server = "smtp server"
+sender_email = "email"
+receiver_email = ["receiver1@xy.com","receiver2@xy.com"]
+password = "pwd"
+sporocilo = """<html>
+<head></head>
+<body>Futhead data in attachment</body>
+</html>"""
+
+msg = MIMEMultipart('alternative')
+msg['Subject'] = "Futhead data - year 20{}".format(year)
+msg['From'] = "email"
+msg['To'] = "receiver1@xy.com;receiver2@xy.com"
+
+part = MIMEText(sporocilo, 'html')
+
+msg.attach(part)
+
+print("Attaching CSV")
+
+with open("players_futhead_{}.csv".format(year), "rb") as fil:
+    part_file = MIMEApplication(fil.read(), Name=basename("players_futhead_{}.csv".format(year)))
+    part_file['Content-Disposition'] = 'attachment; filename="{}"'.format(basename("players_futhead_{}.csv".format(year)))
+    msg.attach(part_file)
+
+print("Start sending email")
+
+with smtplib.SMTP(smtp_server, port) as server:
+	server.starttls()
+	server.login(sender_email, password)
+	server.sendmail(sender_email, receiver_email, msg.as_string())
+	server.quit()
+
+print("Email sent")
