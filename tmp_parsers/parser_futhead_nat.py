@@ -3,6 +3,9 @@ import re
 import requests
 import pandas as pd
 import unicodedata
+import sys
+
+year = sys.argv[1]
 
 # List Intializations
 tiers = [
@@ -17,12 +20,12 @@ extra_attributes = []
 
 # Looping through all pages to retrieve players stats and information
 for tier in tiers:
-    FutHead = requests.get('https://www.futhead.com/20/players/?level={}_nif&bin_platform=pc'.format(tier))
+    FutHead = requests.get('https://www.futhead.com/{}/players/?level={}_nif&bin_platform=pc'.format(year, tier))
     bs = BeautifulSoup(FutHead.text, 'html.parser')
     TotalPages = int(re.sub('\s +', '', str(bs.find('span', {'class': 'font-12 font-bold margin-l-r-10'}).get_text())).split(' ')[1])
     print('Number of pages to be parsed for FIFA {} players: {}'.format(tier, str(TotalPages)))
     for page in range(1, TotalPages + 1): 
-        FutHead = requests.get('https://www.futhead.com/20/players/?level={}_nif&page={}&bin_platform=pc'.format(tier, str(page)))
+        FutHead = requests.get('https://www.futhead.com/{}/players/?level={}_nif&page={}&bin_platform=pc'.format(year, tier, str(page)))
         bs = BeautifulSoup(FutHead.text, 'html.parser')
         Stats = bs.findAll('span', {'class': 'player-stat stream-col-60 hidden-md hidden-sm'})
         Names = bs.findAll('span', {'class': 'player-name'})
@@ -71,8 +74,11 @@ for tier in tiers:
                 FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
                 bs = BeautifulSoup(FutHead_detail.text, 'html.parser')
                 if temp[2] == '':
-	                Nationality = bs.find('div', {'class': 'tab in'}).findAll('div', {'class': 'col-xs-5 player-sidebar-value'})[2]
-	                temp[2] = Nationality.get_text().strip().upper()
+                    try:
+	                    Nationality = bs.find('div', {'class': 'tab in'}).findAll('div', {'class': 'col-xs-5 player-sidebar-value'})[2]
+	                    temp[2] = Nationality.get_text().strip().upper()
+                    except:
+                        temp[2] = ''
                 Extra_Attr = bs.findAll('div', {'class': 'divided-row player-stat-row sm'})
                 
                 for attr in Extra_Attr:
@@ -89,7 +95,7 @@ for tier in tiers:
 
             print('URL ' + url['href'] + ' is done!')
 
-        print('Page {} ({}) is done!'.format(str(page), tier))
+        print('Page {} of {} ({}) is done!'.format(str(page), str(TotalPages), tier))
 
 print("Preparing data")
 
@@ -103,7 +109,7 @@ for i in range(len(players)):
 
 print("Saving files")
 
-with open("players_futhead.csv", "w") as text_file:
+with open("players_futhead_{}.csv".format(year), "w", encoding="utf-8") as text_file:
     text_file.write(tmp)
 
 print("Files saved")
