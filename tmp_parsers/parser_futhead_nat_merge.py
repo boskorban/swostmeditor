@@ -13,6 +13,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 year = sys.argv[1]
+location = sys.argv[2]
 
 tiers = [
 	'gold', 
@@ -33,12 +34,12 @@ print("\n")
 i_tier = 0
 for ti in range(i_tier, 3):
 	i = 0
-	for file in os.listdir("{}\\files_{}".format(os.path.dirname(sys.argv[0]), year)):
+	for file in os.listdir("{}\\files_{}".format(location, year)):
 		if file.startswith('players_futhead_{}_{}'.format(year, ti + 1)):
 			i += 1
 	print("Tier {} has {} files".format(tiers[ti], i))
 
-onlyfiles = next(os.walk("{}\\files_{}".format(os.path.dirname(sys.argv[0]), year)))[2]
+onlyfiles = next(os.walk("{}\\files_{}".format(location, year)))[2]
 sum_Files = len(onlyfiles)
 
 print("\n")
@@ -48,24 +49,24 @@ print("It's {} files".format(sum_Files))
 if sum_TotalPages == len(onlyfiles):
 	print("Merging CSVs")
 
-	os.chdir("{}\\files_{}".format(os.path.dirname(sys.argv[0]), year))
+	os.chdir("{}\\files_{}".format(location, year))
 
 	extension = 'csv'
 	all_filenames = [i for i in glob.glob('*.{}'.format(extension))]
 
 	combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames ])
 
-	combined_csv.to_csv("players_futhead_{}.csv".format(year), index=False, encoding='utf-8')
+	combined_csv.to_csv("{}\\players_futhead_{}.csv".format(location, year), index=False, encoding='utf-8')
 
 	print("Merging completed")
 
 	print("Preparing email")
 
 	port = 587
-	smtp_server = ""
-	sender_email = ""
-	receiver_email = [""]  
-	password = "" 
+	smtp_server = "" # fill
+	sender_email = "" # fill
+	receiver_email = [] # fill  
+	password = "" # fill
 	sporocilo = """<html>
 	<head></head>
 	<body>Futhead data in attachment</body>
@@ -73,8 +74,8 @@ if sum_TotalPages == len(onlyfiles):
 
 	msg = MIMEMultipart('alternative')
 	msg['Subject'] = "Futhead data - year 20{}".format(year)
-	msg['From'] = ""
-	msg['To'] = ""
+	msg['From'] = "" # fill
+	msg['To'] = "" # fill
 
 	part = MIMEText(sporocilo, 'html')
 
@@ -82,7 +83,7 @@ if sum_TotalPages == len(onlyfiles):
 
 	print("Attaching CSV")
 
-	with open("players_futhead_{}.csv".format(year), "rb") as fil:
+	with open("{}\\players_futhead_{}.csv".format(location, year), "rb") as fil:
 		part_file = MIMEApplication(fil.read(), Name=basename("players_futhead_{}.csv".format(year)))
 		part_file['Content-Disposition'] = 'attachment; filename="{}"'.format(basename("players_futhead_{}.csv".format(year)))
 		msg.attach(part_file)

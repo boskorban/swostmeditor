@@ -15,9 +15,10 @@ year = sys.argv[1]
 tier = sys.argv[2] 
 tier = int(tier) - 1
 page_i = sys.argv[3]
+location = sys.argv[4]
 
-if not os.path.exists("{}\\files_{}".format(os.path.dirname(sys.argv[0]), year)):
-    os.makedirs("{}\\files_{}".format(os.path.dirname(sys.argv[0]), year))
+if not os.path.exists("{}\\files_{}".format(location, year)):
+    os.makedirs("{}\\files_{}".format(location, year))
 
 # List Intializations
 tiers = [
@@ -118,7 +119,7 @@ for page in range(int(page_i), TotalPages + 1):
 
 	print("Saving files")
 
-	with open("files_{}\\players_futhead_{}_{}_{}.csv".format(year, year, tier + 1, page), "w", encoding="utf-8") as text_file:
+	with open("{}\\files_{}\\players_futhead_{}_{}_{}.csv".format(location, year, year, tier + 1, page), "w", encoding="utf-8") as text_file:
 		text_file.write(tmp)
 
 	players = []
