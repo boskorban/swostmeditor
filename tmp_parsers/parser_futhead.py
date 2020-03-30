@@ -15,6 +15,8 @@ def cleanText(text):
     tmp_name = unicodedata.normalize('NFD', tmp_name).encode('ascii', 'ignore').decode('utf8')
     return tmp_name
 
+year = sys.argv[1]
+
 # List Intializations
 tiers = [
     'gold',
@@ -28,12 +30,12 @@ extra_attributes = []
 
 # Looping through all pages to retrieve players stats and information
 for tier in tiers:
-    FutHead = requests.get('https://www.futhead.com/20/players/?level={}_nif&bin_platform=pc'.format(tier))
+    FutHead = requests.get('https://www.futhead.com/{}/players/?level={}_nif&bin_platform=pc'.format(year, tier))
     bs = BeautifulSoup(FutHead.text, 'html.parser')
     TotalPages = int(re.sub('\s +', '', str(bs.find('span', {'class': 'font-12 font-bold margin-l-r-10'}).get_text())).split(' ')[1])
     print('Number of pages to be parsed for FIFA {} players: {}'.format(tier, str(TotalPages)))
     for page in range(1, TotalPages + 1):
-        FutHead = requests.get('https://www.futhead.com/20/players/?level={}_nif&page={}&bin_platform=pc'.format(tier, str(page)))
+        FutHead = requests.get('https://www.futhead.com/{}/players/?level={}_nif&page={}&bin_platform=pc'.format(year, tier, str(page)))
         bs = BeautifulSoup(FutHead.text, 'html.parser')
         Stats = bs.findAll('span', {'class': 'player-stat stream-col-60 hidden-md hidden-sm'})
         Names = bs.findAll('span', {'class': 'player-name'})
@@ -76,12 +78,24 @@ for tier in tiers:
                 i = 0
 
         for url in url_pages:
-            temp = [0, 0]
+            temp = [0, 0, '', '']
             while int(temp[0]) == 0 and int(temp[1]) == 0:
                 FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
                 bs = BeautifulSoup(FutHead_detail.text, 'html.parser')
+
+                if temp[3] == '':
+                    Name = bs.find('span', {'class': 'info display-inline-block'}).find('small', {'class': 'firstname'})
+                    temp[3] = (Name.get_text().strip().upper() + ' ' + Name.next_sibling.strip().upper()).strip()
+
+                if temp[2] == '':
+                    try:
+                        Nationality = bs.find('div', {'class': 'tab in'}).findAll('div', {'class': 'col-xs-5 player-sidebar-value'})[2]
+                        temp[2] = Nationality.get_text().strip().upper()
+                    except:
+                        temp[2] = ''
+
                 Extra_Attr = bs.findAll('div', {'class': 'divided-row player-stat-row sm'})
-                
+               
                 for attr in Extra_Attr:
                     tmp_skill = attr.find('span', {'class': 'player-stat-title'}).get_text()
                     if tmp_skill == 'Finishing':
@@ -101,12 +115,12 @@ for tier in tiers:
 print("Preparing data")
 
 # Inserting data into its specific table
-tmp = 'NAME;CLUB;LEAGUE;POSITION;RATING;PACE;SHOOTING;PASSING;DRIBBLING;DEFENDING;PHYSICAL;FINISHING;HEADING\n'
+tmp = 'NATIONALITY;NAME;CLUB;LEAGUE;POSITION;RATING;PACE;SHOOTING;PASSING;DRIBBLING;DEFENDING;PHYSICAL;FINISHING;HEADING\n'
 tmp_sql = ''
 for i in range(len(players)):
     try:
-        tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
-        tmp_sql = tmp_sql + "INSERT INTO players (name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}',{},{},{},{},{},{},{},{},{});\n".format(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
+        tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(extra_attributes[i][2], extra_attributes[i][3], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
+        tmp_sql = tmp_sql + "INSERT INTO players (nationality, name, club, league, position, rating, pace, shooting, passing, dribbling, defending, physical, finishing, heading) VALUES ('{}','{}','{}','{}','{}',{},{},{},{},{},{},{},{},{});\n".format(extra_attributes[i][2], cleanText(extra_attributes[i][3]), players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
     except Error as e:
         print("Error: " + e + " - " + str(i))
 
@@ -124,6 +138,7 @@ print("Preparing database")
 
 sql_create_table = """CREATE TABLE IF NOT EXISTS players (
                                     id integer PRIMARY KEY,
+                                    nationality text NOT NULL,
                                     name text NOT NULL,
                                     club text,
                                     league text,

@@ -50,7 +50,7 @@ for page in range(int(page_i), TotalPages + 1):
 	tmp_name = ''
 	for i in range(num):
 		p = ['', '', '', 0, 0]
-		p[0] = Names[i].get_text()
+		p[0] = Names[i].get_text() # not in use
 		strong = Information[i].strong.extract()
 		try:
 			p[1] = re.sub('\s +', '', str(Information[i].get_text())).split('| ')[1]
@@ -81,16 +81,22 @@ for page in range(int(page_i), TotalPages + 1):
 			i = 0
 
 	for url in url_pages:
-		temp = [0, 0, '']
+		temp = [0, 0, '', '']
 		while int(temp[0]) == 0 and int(temp[1]) == 0:
 			FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
 			bs = BeautifulSoup(FutHead_detail.text, 'html.parser')
+			
+			if temp[3] == '':
+				Name = bs.find('span', {'class': 'info display-inline-block'}).find('small', {'class': 'firstname'})
+				temp[3] = (Name.get_text().strip().upper() + ' ' + Name.next_sibling.strip().upper()).strip()
+
 			if temp[2] == '':
 				try:
 					Nationality = bs.find('div', {'class': 'tab in'}).findAll('div', {'class': 'col-xs-5 player-sidebar-value'})[2]
 					temp[2] = Nationality.get_text().strip().upper()
 				except:
 					temp[2] = ''
+					
 			Extra_Attr = bs.findAll('div', {'class': 'divided-row player-stat-row sm'})
 			
 			for attr in Extra_Attr:
@@ -113,7 +119,7 @@ for page in range(int(page_i), TotalPages + 1):
 	tmp = 'NATIONAL;NAME;CLUB;LEAGUE;POSITION;RATING;PACE;SHOOTING;PASSING;DRIBBLING;DEFENDING;PHYSICAL;FINISHING;HEADING\n'
 	for i in range(len(players)):
 		try:
-			tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(extra_attributes[i][2], players[i][0], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
+			tmp = tmp + "{};{};{};{};{};{};{};{};{};{};{};{};{};{}\n".format(extra_attributes[i][2], extra_attributes[i][3], players[i][1], players[i][2], players[i][3], players[i][4], attributes[i][0], attributes[i][1], attributes[i][2], attributes[i][3], attributes[i][4], attributes[i][5], extra_attributes[i][0], extra_attributes[i][1])
 		except Error as e:
 			print("Error: " + e + " - " + str(i))
 

@@ -551,14 +551,14 @@ def on_btn_get_data_clicked():
 
                                 if len(rows) > 0:
                                     for row in rows: 
-                                        rating = row[5]
-                                        sp = getFutheadSwosSkill(row[6])
-                                        ve = getFutheadSwosSkill(row[7])
-                                        pa = getFutheadSwosSkill(row[8])
-                                        co = getFutheadSwosSkill(row[9])
-                                        ta = getFutheadSwosSkill(row[10])
-                                        fi = getFutheadSwosSkill(row[12])
-                                        he = getFutheadSwosSkill(row[13])
+                                        rating = row[6]
+                                        sp = getFutheadSwosSkill(row[7])
+                                        ve = getFutheadSwosSkill(row[8])
+                                        pa = getFutheadSwosSkill(row[9])
+                                        co = getFutheadSwosSkill(row[10])
+                                        ta = getFutheadSwosSkill(row[11])
+                                        fi = getFutheadSwosSkill(row[13])
+                                        he = getFutheadSwosSkill(row[14])
 
                                         fut_array = []
                                         fut_array = getFutheadSwosSkillArray(rating, sp, ve, pa, co, ta, fi, he)
