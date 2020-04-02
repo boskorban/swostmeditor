@@ -81,6 +81,8 @@ for tier in tiers:
             temp = [0, 0, '', '']
             while int(temp[0]) == 0 and int(temp[1]) == 0:
                 FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
+                while FutHead_detail.status_code != 200:
+                    FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
                 bs = BeautifulSoup(FutHead_detail.text, 'html.parser')
 
                 if temp[3] == '':
