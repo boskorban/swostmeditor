@@ -81,6 +81,22 @@ def getPrice(position, price):
             if float(row[2]) <= float(price) and float(row[1]) >= float(price):
                 return row[0]
 
+def getPriceControl(price):
+    with open("data\\GK.csv", "r") as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=';')
+        for row in csv_reader:
+            if row[0] == price:
+                return True
+    return False
+
+def getCountryControl(drzava):
+    with open('data\\countries.csv', "r") as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=';')
+        for row in csv_reader:
+            if row[1] == drzava:
+                print(row[1])
+                return True
+    return False
 
 def getPriceSkill(position, skill):
     with open(getFile(position), "r") as csv_file:
@@ -508,14 +524,17 @@ def on_btn_get_data_clicked():
                 cena = zapis.findAll("td")[8].text.strip()
                 cena = cena.replace("-", "")
                 if cena == '':
-                    cena_div = 0
-                    cena_swos = 0
-                    _sum = 0
+                    cena_div = 0.001
+                    cena_swos = '25K'
+                    _sum = 1
                 else:
                     cena_div = int(cena.replace("€", "").replace(
                         "k", "000").replace("m", "0000").replace(".", "")) / 1000000
                     cena_swos = getPrice(posi, cena_div)
-                    _sum = int(getSkill(posi, cena_div))
+                    if posi != 'GK':
+                        _sum = int(getSkill(posi, cena_div))
+                    else:
+                        _sum = 0
 
                 imported = 0
                 if posi == 'GK':
@@ -673,10 +692,18 @@ def fillTable():
     tabela.setHorizontalHeaderLabels(["National", "Name", "Position", "Player skin", "PA",
                                       "VE", "HE", "TA", "CO", "SP", "FI", "SWOS price", "Sum skills", "TM price", "Minutes", "In squad", "Appearances", "Goals", "Image"])
 
+    attr = ['White', 'Black', 'Blonde']
     for row in range(0, len(full_arr)):
         for column in range(0, 18):
-            tabela.setItem(row, column, QTableWidgetItem((full_arr[row][column])))
-            
+            #comboBox = QtWidgets.QComboBox()
+            #comboBox.addItems(attr)
+            #tabela.setCellWidget(row, 3, comboBox)
+
+            item = QTableWidgetItem((full_arr[row][column]))
+            tabela.setItem(row, column, item)
+            if column <= 4 and column >= 10:
+                item.setFlags(QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable)  
+                               
         painter = QPainter()
         lbl = QLabel()
         image = QPixmap(full_arr[row][18])
@@ -856,6 +883,60 @@ def isEnoughPlayersFormation(formation, position):
     else: 
         return ""
 
+def changedTable():
+    tabela.itemChanged.disconnect(changedTable) 
+    global full_arr
+    if tabela.selectionModel().selection().indexes():
+        for i in tabela.selectionModel().selection().indexes():
+            row, column = i.row(), i.column()
+
+        if column >= 4 and column <= 10 and tabela.item(row, 2).text() != 'GK': # attributes
+            skill = int(tabela.item(row, column).text())
+            if skill < 0 or skill > 7:
+                alert_popup("Skill must be between 0 and 7!")
+            else:
+                
+                full_arr[row][column] = tabela.item(row, column).text()
+
+                sum_skill = int(full_arr[row][4]) + int(full_arr[row][5]) + int(full_arr[row][6]) + int(full_arr[row][7]) + int(full_arr[row][8]) + int(full_arr[row][9]) + int(full_arr[row][10]) 
+                full_arr[row][11] = getPriceSkill(full_arr[row][2], sum_skill)
+                full_arr[row][12] = str(sum_skill)
+                #tabela.item(row, 11).setText(getPriceSkill(full_arr[row][2], sum_skill))
+                #tabela.item(row, 12).setText(str(sum_skill))
+
+        if column == 3: # skin
+            if tabela.item(row, 3).text() not in ["White", "Black", "Blonde"]:
+                alert_popup("Wrong skin!") 
+            else:
+                full_arr[row][3] = tabela.item(row, 3).text()   
+
+        if column == 2: # position
+            if tabela.item(row, 2).text() not in ["GK", "LB", "D", "RB", "LW", "M", "RW", "A"]:
+                alert_popup("Wrong position!") 
+            else:
+                full_arr[row][2] = tabela.item(row, 2).text()
+                setSWOSPriceEach(row)
+
+        if column == 1: # name
+            if tabela.item(row, 1).text() == "":
+                alert_popup("Name can not be blank!") 
+            else:
+                full_arr[row][2] = tabela.item(row, 2).text()
+
+        if column == 0: # nationality
+            if getCountryControl(tabela.item(row, 0).text()):
+                full_arr[row][0] = tabela.item(row, 0).text()
+            else:
+                alert_popup("Wrong nationality!") 
+
+        if column == 11 and tabela.item(row, 2).text() == 'GK': # price for GK
+            if getPriceControl(tabela.item(row, 11).text()):
+               full_arr[row][11] = tabela.item(row, 11).text()   
+            else:                
+                alert_popup("Wrong SWOS price!")             
+
+        fillTable()
+    tabela.itemChanged.connect(changedTable) 
 
 def generateMenu():
     if tabela.selectionModel().selection().indexes():
@@ -869,7 +950,7 @@ def generateMenu():
 
         deleAction = menu.addAction("Delete this player")
 
-        changePlayerName = menu.addAction("Change player name")
+        """changePlayerName = menu.addAction("Change player name")
 
         changePlayerCountry = menu.addAction("Change player country")
 
@@ -899,7 +980,7 @@ def generateMenu():
         changeSkillTA = changeSkillMenu.addAction("TA")
         changeSkillCO = changeSkillMenu.addAction("CO")
         changeSkillSP = changeSkillMenu.addAction("SP")
-        changeSkillFI = changeSkillMenu.addAction("FI")
+        changeSkillFI = changeSkillMenu.addAction("FI")"""
 
         action = menu.exec_(QtGui.QCursor.pos())
         if action == deleAction:
@@ -910,7 +991,7 @@ def generateMenu():
                 alert_popup(str_return)
             else:
                 full_arr.pop(row)
-        elif action == changePlayerName:
+        """elif action == changePlayerName:
             tmp_name = setName(str(full_arr[row][1]))
             if tmp_name != None:
                 full_arr[row][1] = tmp_name
@@ -928,12 +1009,6 @@ def generateMenu():
             full_arr[row][3] = "Black"
         elif action == changeSkinBlondeAction:
             full_arr[row][3] = "Blonde"
-        elif action == changeSumSkillAction:
-            tmp_skill = setSkill(int(full_arr[row][12]))
-            if tmp_skill != None:
-                full_arr[row][12] = int(tmp_skill)
-                recalculateSwosSkillPrice(
-                    row, full_arr[row][2], int(full_arr[row][12]))
         elif action == changePositionAction:
             tmp_position = setPosition()
             if tmp_position != None:
@@ -972,6 +1047,12 @@ def generateMenu():
             full_arr[row][2] = "A"
             recalculateSwosSkillPrice(
                 row, full_arr[row][2], int(full_arr[row][12]))
+        elif action == changeSumSkillAction:
+            tmp_skill = setSkill(int(full_arr[row][12]))
+            if tmp_skill != None:
+                full_arr[row][12] = int(tmp_skill)
+                recalculateSwosSkillPrice(
+                    row, full_arr[row][2], int(full_arr[row][12]))
         elif action == changeSkillPA and full_arr[row][2] != "GK":
             tmp_sk = setSkillEach(int(full_arr[row][4]), "PA")
             if tmp_sk != None:
@@ -1006,7 +1087,7 @@ def generateMenu():
             tmp_sk = setSkillEach(int(full_arr[row][10]), "FI")
             if tmp_sk != None:
                 full_arr[row][10] = str(tmp_sk)
-                setSWOSPriceEach(row)
+                setSWOSPriceEach(row)"""
 
         fillTable()
 
@@ -1014,11 +1095,9 @@ def generateMenu():
 def setSWOSPriceEach(row_id):
     global full_arr
 
-    sum_skill = int(full_arr[row_id][4]) + int(full_arr[row_id][5]) + int(full_arr[row_id][6]) + int(
-        full_arr[row_id][7]) + int(full_arr[row_id][8]) + int(full_arr[row_id][9]) + int(full_arr[row_id][10])
+    sum_skill = int(full_arr[row_id][4]) + int(full_arr[row_id][5]) + int(full_arr[row_id][6]) + int(full_arr[row_id][7]) + int(full_arr[row_id][8]) + int(full_arr[row_id][9]) + int(full_arr[row_id][10])
+    full_arr[row_id][11] = getPriceSkill(full_arr[row_id][2], sum_skill)
     full_arr[row_id][12] = str(sum_skill)
-    full_arr[row_id][11] = getPrice(full_arr[row_id][2], sum_skill)
-
 
 def recalculateSwosSkillPrice(poz, position, skill):
     global full_arr
@@ -1190,9 +1269,10 @@ lbl_A = QLabel('Attacker (A)')
 lbl_A_number = QLabel('0')
 
 tabela = QTableWidget()
-tabela.setEditTriggers(QTableWidget.NoEditTriggers)
+#tabela.setEditTriggers(QTableWidget.NoEditTriggers)
 tabela.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 tabela.customContextMenuRequested.connect(generateMenu)
+tabela.itemChanged.connect(changedTable) 
 
 lbl_league_id_swoes = QLabel('League ID SWOS')
 ed_league_id_swoes = QLineEdit('1')
@@ -1287,6 +1367,6 @@ layout_swos.addLayout(layout_7)
 
 tab_TM.setLayout(layout_tm)
 tab_SWOS.setLayout(layout_swos)
-tabs.setWindowTitle("SWOS - TM Editor v1.2")
+tabs.setWindowTitle("SWOS - TM Editor v1.4")
 tabs.showMaximized()
 app.exec_()
