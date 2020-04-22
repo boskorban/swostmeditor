@@ -94,7 +94,6 @@ def getCountryControl(drzava):
         csv_reader = csv.reader(csv_file, delimiter=';')
         for row in csv_reader:
             if row[1] == drzava:
-                print(row[1])
                 return True
     return False
 
@@ -978,6 +977,7 @@ def changedTable():
     tabela.itemChanged.connect(changedTable) 
 
 def generateMenu():
+    tabela.itemChanged.disconnect(changedTable)
     if tabela.selectionModel().selection().indexes():
         for i in tabela.selectionModel().selection().indexes():
             row, column = i.row(), i.column()
@@ -1129,6 +1129,7 @@ def generateMenu():
                 setSWOSPriceEach(row)"""
 
         fillTable()
+        tabela.itemChanged.connect(changedTable)
 
 
 def setSWOSPriceEach(row_id):
