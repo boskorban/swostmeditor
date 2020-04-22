@@ -61,7 +61,7 @@ def getCountry(drzava):
     with open('data\\countries.csv', "r") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=';')
         for row in csv_reader:
-            if row[0] == drzava:
+            if row[0].upper() == drzava.upper():
                 return row[1]
     return "XYZ"
 
@@ -496,7 +496,7 @@ def on_btn_get_data_clicked():
         ekipa = ekipa.upper()
 
         trener = soup.find(
-            "div", {"class": "container-hauptinfo", "itemprop": "name"}).find("a").text
+            "div", {"class": "container-hauptinfo"}).find("a").text
         trener = unicodedata.normalize('NFD', trener).encode(
             'ascii', 'ignore').decode('utf8')
         trener = trener.upper()
@@ -504,6 +504,7 @@ def on_btn_get_data_clicked():
         general_skin = 'White'
 
         for zapis in zapisi:
+            igralec = '' 
             if zapis.find("td", {"class": "posrela"}) != None:
                 igralec = zapis.find("td", {"class": "posrela"}).find("table", {
                     "class": "inline-table"}).find("tr").find("td", {"class": "hauptlink"}).find("a").text
@@ -535,7 +536,38 @@ def on_btn_get_data_clicked():
                         _sum = int(getSkill(posi, cena_div))
                     else:
                         _sum = 0
+            elif zapis.find("td", {"class": ""}) != None:
+                if zapis.find("td", {"class": ""}).find("table", {"class": "inline-table"}) != None:
+                    igralec = zapis.find("td", {"class": ""}).find("table", {"class": "inline-table"}).find("tr").find("td", {"class": "hauptlink"}).find("a", {"class": "spielprofil_tooltip"}).text
+                    igralec = unicodedata.normalize('NFD', igralec).encode('ascii', 'ignore').decode('utf8')
+                    igralec = igralec.upper()
+                    pozicija = zapis.find("td", {"class": ""}).find(
+                        "table", {"class": "inline-table"}).findAll("tr")[1].find("td").text
+                    posi = getPosition(pozicija)
 
+                    slika = zapis.find("td", {"class": ""}).find("table", {"class": "inline-table"}).find("tr").find("td").find("a").find("img")["data-src"]
+                    image = QPixmap()
+                    url = slika
+                    data = urlopen(url).read()
+                    image.loadFromData(data)
+
+                    drzavljanstvo = ekipa
+                    cena = zapis.findAll("td")[8].text.strip()
+                    cena = cena.replace("-", "")
+                    if cena == '':
+                        cena_div = 0.001
+                        cena_swos = '25K'
+                        _sum = 1
+                    else:
+                        cena_div = int(cena.replace("€", "").replace(
+                            "k", "000").replace("m", "0000").replace(".", "")) / 1000000
+                        cena_swos = getPrice(posi, cena_div)
+                        if posi != 'GK':
+                            _sum = int(getSkill(posi, cena_div))
+                        else:
+                            _sum = 0
+
+            if igralec != '':
                 imported = 0
                 if posi == 'GK':
                     pa = str(0)
@@ -624,11 +656,18 @@ def on_btn_get_data_clicked():
             "table", {"class": "items"}).find("tbody").findAll("tr")
 
         for zapis in zapisi_minute:
+            igralec = ''
             if zapis.find("td", {"class": "posrela"}) != None:
                 igralec = zapis.find("td", {"class": "posrela"}).find("table", {
                     "class": "inline-table"}).find("tr").find("td", {"class": "hauptlink"}).find("a").text
                 igralec = unicodedata.normalize('NFD', igralec).encode(
                     'ascii', 'ignore').decode('utf8')
+            elif zapis.find("td", {"class": ""}) != None:
+                if zapis.find("td", {"class": ""}).find("table", {"class": "inline-table"}) != None:
+                    igralec = zapis.find("td", {"class": ""}).find("table", {"class": "inline-table"}).find("tr").find("td", {"class": "hauptlink"}).find("a", {"class": "spielprofil_tooltip"}).text
+                    igralec = unicodedata.normalize('NFD', igralec).encode('ascii', 'ignore').decode('utf8')
+            
+            if igralec != '':
                 igralec = igralec.upper()
                 squad = zapis.findAll("td")[7].text
                 squad = squad.replace("-", "0")
@@ -1226,7 +1265,7 @@ formation_arr = []
 # components for GUI
 lbl_team_url = QLabel('Team URL on TM ')
 ed_team_url = QLineEdit(
-    'https://www.transfermarkt.com/nd-lendava-1903/startseite/verein/9233')
+    ' https://www.transfermarkt.com/nd-lendava-1903/startseite/verein/9233') # https://www.transfermarkt.com/slowenien/startseite/verein/3588
 lbl_team_name = QLabel('Team short name TM ')
 ed_team_name = QLineEdit('')
 lbl_team_id = QLabel('Team ID TM')
@@ -1367,6 +1406,6 @@ layout_swos.addLayout(layout_7)
 
 tab_TM.setLayout(layout_tm)
 tab_SWOS.setLayout(layout_swos)
-tabs.setWindowTitle("SWOS - TM Editor v1.4")
+tabs.setWindowTitle("SWOS - TM Editor v1.4.1")
 tabs.showMaximized()
 app.exec_()
