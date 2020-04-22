@@ -73,7 +73,8 @@ pyqt5
 | 1.3.1 | 10.2.2020 | URL correction to download Futhead skills database |
 | 1.3.2 | 17.2.2020 | Possibility to change players country<br/>Control number players position based on formation<br/>URL trim whitespace on start or end of URL |
 | 1.4 | 20.4.2020 | **New minor version v1.4**<br/>Editing data in table (no more need for right-click menu)<br/>Fixed issues<br/>Other small changes |
-| 1.4.1 | 22.2.2020 | Bug fixed - national teams import<br/>Other small changes |
+| 1.4.1 | 22.4.2020 | Bug fixed - national teams import<br/>Other small changes |
+| 1.4.2 | 22.4.2020 | Prices CSV's corrected<br/>Quicker player deleting |
 
 # To-Do
 | Version | Planned | Description | Done |

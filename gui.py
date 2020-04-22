@@ -1407,6 +1407,6 @@ layout_swos.addLayout(layout_7)
 
 tab_TM.setLayout(layout_tm)
 tab_SWOS.setLayout(layout_swos)
-tabs.setWindowTitle("SWOS - TM Editor v1.4.1")
+tabs.setWindowTitle("SWOS - TM Editor v1.4.2")
 tabs.showMaximized()
 app.exec_()
