@@ -7,6 +7,7 @@ import unicodedata
 import sqlite3
 import ftplib
 import os
+import sys
 from zipfile import ZipFile
 
 def cleanText(text):

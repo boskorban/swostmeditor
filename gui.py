@@ -478,7 +478,7 @@ def on_btn_get_data_clicked():
             formation_arr.pop(0)
 
         qm = QMessageBox()
-        ret = qm.question(qm, '', "Fill data with skills from Futhead?", qm.Yes | qm.No)
+        ret = ed_futhead_yesno_tm.currentText()
 
         headers = {"User-Agent": "Mozilla/5.0"}
         r = requests.get("https://www.transfermarkt.com/{}/startseite/verein/{}".format(
@@ -577,7 +577,7 @@ def on_btn_get_data_clicked():
                     sp = str(0)
                     fi = str(0)
                 else:
-                    if ret == qm.No:
+                    if ret == 'No':
                         imported = 1
                         rnd_array = returnSkillArray(_sum)
 
@@ -989,7 +989,7 @@ def generateMenu():
 
         deleAction = menu.addAction("Delete this player")
 
-        """changePlayerName = menu.addAction("Change player name")
+        changePlayerName = menu.addAction("Change player name")
 
         changePlayerCountry = menu.addAction("Change player country")
 
@@ -1019,7 +1019,7 @@ def generateMenu():
         changeSkillTA = changeSkillMenu.addAction("TA")
         changeSkillCO = changeSkillMenu.addAction("CO")
         changeSkillSP = changeSkillMenu.addAction("SP")
-        changeSkillFI = changeSkillMenu.addAction("FI")"""
+        changeSkillFI = changeSkillMenu.addAction("FI")
 
         action = menu.exec_(QtGui.QCursor.pos())
         if action == deleAction:
@@ -1030,7 +1030,7 @@ def generateMenu():
                 alert_popup(str_return)
             else:
                 full_arr.pop(row)
-        """elif action == changePlayerName:
+        elif action == changePlayerName:
             tmp_name = setName(str(full_arr[row][1]))
             if tmp_name != None:
                 full_arr[row][1] = tmp_name
@@ -1126,7 +1126,7 @@ def generateMenu():
             tmp_sk = setSkillEach(int(full_arr[row][10]), "FI")
             if tmp_sk != None:
                 full_arr[row][10] = str(tmp_sk)
-                setSWOSPriceEach(row)"""
+                setSWOSPriceEach(row)
 
         fillTable()
         tabela.itemChanged.connect(changedTable)
@@ -1255,6 +1255,7 @@ layout_5 = QHBoxLayout()
 layout_6 = QHBoxLayout()
 layout_7 = QHBoxLayout()
 layout_8 = QGridLayout()
+layout_9 = QHBoxLayout()
 
 tabs.addTab(tab_TM, "Transfermarkt")
 tabs.addTab(tab_SWOS, "SWOS csv")
@@ -1290,6 +1291,18 @@ ed_formation_tm.addItem("4-3-3")
 ed_formation_tm.addItem("4-2-4")
 ed_formation_tm.addItem("3-4-3")
 ed_formation_tm.addItem("5-2-3")
+lbl_basic_calc_tm = QLabel('Basic calculation')
+ed_basic_calc_tm = QComboBox()
+ed_basic_calc_tm.addItem("Random calculation")
+ed_basic_calc_tm.addItem("Based on position (Armandojimenez method) - in implementation")
+lbl_futhead_calc_tm = QLabel('Futhead calculation')
+ed_futhead_calc_tm = QComboBox()
+ed_futhead_calc_tm.addItem("Based on SWOS prices")
+ed_futhead_calc_tm.addItem("Max skill is 49 (Armandojimenez method) - in implementation")
+lbl_futhead_yesno_tm = QLabel('Use Futhead data?')
+ed_futhead_yesno_tm = QComboBox()
+ed_futhead_yesno_tm.addItem("No")
+ed_futhead_yesno_tm.addItem("Yes")
 
 lbl_GK = QLabel('Goalkeepers (GK)')
 lbl_GK_number = QLabel('0')
@@ -1309,7 +1322,6 @@ lbl_A = QLabel('Attacker (A)')
 lbl_A_number = QLabel('0')
 
 tabela = QTableWidget()
-#tabela.setEditTriggers(QTableWidget.NoEditTriggers)
 tabela.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 tabela.customContextMenuRequested.connect(generateMenu)
 tabela.itemChanged.connect(changedTable) 
@@ -1343,6 +1355,9 @@ lbl_team_id_swoes.setFixedWidth(100)
 lbl_team_name_tm.setFixedWidth(100)
 lbl_coach_name_tm.setFixedWidth(100)
 lbl_formation_tm.setFixedWidth(100)
+lbl_basic_calc_tm.setFixedWidth(100)
+lbl_futhead_calc_tm.setFixedWidth(100)
+lbl_futhead_yesno_tm.setFixedWidth(100)
 
 # layout - tab TM
 layout_0.addWidget(lbl_team_url)
@@ -1357,6 +1372,12 @@ layout_3.addWidget(lbl_coach_name_tm)
 layout_3.addWidget(ed_coach_name_tm)
 layout_3.addWidget(lbl_formation_tm)
 layout_3.addWidget(ed_formation_tm)
+layout_9.addWidget(lbl_basic_calc_tm)
+layout_9.addWidget(ed_basic_calc_tm)
+layout_9.addWidget(lbl_futhead_calc_tm)
+layout_9.addWidget(ed_futhead_calc_tm)
+layout_9.addWidget(lbl_futhead_yesno_tm)
+layout_9.addWidget(ed_futhead_yesno_tm)
 layout_8.addWidget(lbl_GK, 0, 0)
 layout_8.addWidget(lbl_GK_number, 0, 1, 1, 10)
 layout_8.addWidget(lbl_RB, 1, 0)
@@ -1388,6 +1409,7 @@ layout_7.addWidget(btn_savecsv)
 layout_tm.addLayout(layout_0)
 layout_tm.addLayout(layout_1)
 layout_tm.addLayout(layout_2)
+layout_tm.addLayout(layout_9)
 
 layout_tm.addWidget(btn_get_data)
 
@@ -1407,6 +1429,6 @@ layout_swos.addLayout(layout_7)
 
 tab_TM.setLayout(layout_tm)
 tab_SWOS.setLayout(layout_swos)
-tabs.setWindowTitle("SWOS - TM Editor v1.4.2")
+tabs.setWindowTitle("SWOS - TM Editor v2.0-alpha")
 tabs.showMaximized()
 app.exec_()
