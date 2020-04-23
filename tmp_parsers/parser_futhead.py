@@ -129,10 +129,10 @@ for i in range(len(players)):
 
 print("Saving files")
 
-with open("players_futhead.csv", "w") as text_file:
+with open("players_futhead.csv", "w", encoding="utf-8") as text_file:
     text_file.write(tmp)
     
-with open("players_futhead.sql", "w") as text_file:
+with open("players_futhead.sql", "w", encoding="utf-8") as text_file:
     text_file.write(tmp_sql)
 
 print("Files saved")
