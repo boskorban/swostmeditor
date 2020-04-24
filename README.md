@@ -75,6 +75,7 @@ pyqt5
 | 1.4 | 20.4.2020 | **New minor version v1.4**<br/>Editing data in table (no more need for right-click menu)<br/>Fixed issues<br/>Other small changes |
 | 1.4.1 | 22.4.2020 | Bug fixed - national teams import<br/>Other small changes |
 | 1.4.2 | 22.4.2020 | Prices CSV's corrected<br/>Quicker player deleting |
+| 1.4.3 | 24.4.2020 | Fixed bug - if there is no coach<br/>Other changes |
 
 # To-Do
 | Version | Planned | Description | Done |
