@@ -477,28 +477,25 @@ def on_btn_get_data_clicked():
         while len(formation_arr) > 0:
             formation_arr.pop(0)
 
-        qm = QMessageBox()
         ret = ed_futhead_yesno_tm.currentText()
 
         headers = {"User-Agent": "Mozilla/5.0"}
-        r = requests.get("https://www.transfermarkt.com/{}/startseite/verein/{}".format(
-            ed_team_name.text(), ed_team_id.text()), headers=headers)
+        r = requests.get("https://www.transfermarkt.com/{}/startseite/verein/{}".format(ed_team_name.text(), ed_team_id.text()), headers=headers)
         r.encoding = r.apparent_encoding
 
         soup = BeautifulSoup(r.text, 'html.parser')
-        zapisi = soup.find("table", {"class": "items"}).find(
-            "tbody").findAll("tr")
+        zapisi = soup.find("table", {"class": "items"}).find("tbody").findAll("tr")
 
         ekipa = soup.find("h1", {"itemprop": "name"}).span.text
-        ekipa = unicodedata.normalize('NFD', ekipa).encode(
-            'ascii', 'ignore').decode('utf8')
+        ekipa = unicodedata.normalize('NFD', ekipa).encode('ascii', 'ignore').decode('utf8')
         ekipa = ekipa.upper()
 
-        trener = soup.find(
-            "div", {"class": "container-hauptinfo"}).find("a").text
-        trener = unicodedata.normalize('NFD', trener).encode(
-            'ascii', 'ignore').decode('utf8')
-        trener = trener.upper()
+        trener = ''
+        if soup.find("div", {"class": "container-hauptinfo"}) != None:
+            if soup.find("div", {"class": "container-hauptinfo"}).find("a") != None:
+                trener = soup.find("div", {"class": "container-hauptinfo"}).find("a").text
+                trener = unicodedata.normalize('NFD', trener).encode('ascii', 'ignore').decode('utf8')
+                trener = trener.upper()
 
         general_skin = 'White'
 
@@ -1429,6 +1426,6 @@ layout_swos.addLayout(layout_7)
 
 tab_TM.setLayout(layout_tm)
 tab_SWOS.setLayout(layout_swos)
-tabs.setWindowTitle("SWOS - TM Editor v2.0-alpha")
+tabs.setWindowTitle("SWOS - TM Editor v1.4.3")
 tabs.showMaximized()
 app.exec_()
