@@ -63,7 +63,7 @@ def getCountry(drzava):
         for row in csv_reader:
             if row[0].upper() == drzava.upper():
                 return row[1]
-    return "XYZ"
+    return "CUS"
 
 
 def getPosition(position):
