@@ -691,6 +691,26 @@ def on_btn_get_data_clicked():
         fillTableCsv()
 
 
+def on_btn_quickexport_clicked():
+    csv_file_head = "NATIONALITY;NAME;POSITION;SKIN;SWOS_PRICE;TM_PRICE;MINUTES;IN_SQUAD;APPEREANCES;GOALS"
+
+    csv_file_formation = csv_file_head + "\n"
+    for igralec in full_arr:
+        csv_file_formation = csv_file_formation + "{};{};{};{};{};{};{};{};{};{}\n".format(igralec[0], igralec[1], igralec[2], igralec[3], igralec[11], igralec[13], igralec[14], igralec[15], igralec[16], igralec[17])
+
+    filename = "{}\\{}_{}_{}.csv".format(ed_quick_csv.text(), ed_team_name_tm.text(), ed_coach_name_tm.text(), ed_formation_tm.currentText())
+    if not os.path.exists(os.path.dirname(filename)):
+        try:
+            os.makedirs(os.path.dirname(filename))
+        except OSError as exc:
+            raise
+
+    with open(filename, "w") as text_file:
+        text_file.write(csv_file_formation)
+
+    alert_popup("Saved to {}".format(filename))
+
+
 def on_btn_savecsv_clicked():
     if ed_league_id_swoes.text() == '':
         alert_popup("Enter league ID")
@@ -1253,6 +1273,7 @@ layout_6 = QHBoxLayout()
 layout_7 = QHBoxLayout()
 layout_8 = QGridLayout()
 layout_9 = QHBoxLayout()
+layout_10 = QHBoxLayout()
 
 tabs.addTab(tab_TM, "Transfermarkt")
 tabs.addTab(tab_SWOS, "SWOS csv")
@@ -1270,8 +1291,6 @@ ed_team_name = QLineEdit('')
 lbl_team_id = QLabel('Team ID TM')
 ed_team_id = QLineEdit('')
 btn_get_data = QPushButton('Get data from TM')
-
-btn_generate = QPushButton('Generate formation')
 
 lbl_team_name_tm = QLabel('Team name')
 ed_team_name_tm = QLineEdit()
@@ -1323,6 +1342,11 @@ tabela.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 tabela.customContextMenuRequested.connect(generateMenu)
 tabela.itemChanged.connect(changedTable) 
 
+lbl_quick_csv = QLabel("Save to")
+ed_quick_csv = QLineEdit("C:\\SWOS")
+btn_quickexport = QPushButton('Quick export')
+btn_generate = QPushButton('Generate formation')
+
 lbl_league_id_swoes = QLabel('League ID SWOS')
 ed_league_id_swoes = QLineEdit('1')
 lbl_team_id_swoes = QLabel('Team ID SWOS')
@@ -1342,6 +1366,7 @@ btn_savecsv = QPushButton('Save CSV file')
 btn_get_data.clicked.connect(on_btn_get_data_clicked)
 btn_generate.clicked.connect(on_btn_generate_clicked)
 btn_savecsv.clicked.connect(on_btn_savecsv_clicked)
+btn_quickexport.clicked.connect(on_btn_quickexport_clicked)
 
 # length for labels
 lbl_team_url.setFixedWidth(100)
@@ -1355,6 +1380,7 @@ lbl_formation_tm.setFixedWidth(100)
 lbl_basic_calc_tm.setFixedWidth(100)
 lbl_futhead_calc_tm.setFixedWidth(100)
 lbl_futhead_yesno_tm.setFixedWidth(100)
+lbl_quick_csv.setFixedWidth(100)
 
 # layout - tab TM
 layout_0.addWidget(lbl_team_url)
@@ -1391,6 +1417,9 @@ layout_8.addWidget(lbl_LW, 6, 0)
 layout_8.addWidget(lbl_LW_number, 6, 1, 1, 10)
 layout_8.addWidget(lbl_A, 7, 0)
 layout_8.addWidget(lbl_A_number, 7, 1, 1, 10)
+layout_10.addWidget(lbl_quick_csv)
+layout_10.addWidget(ed_quick_csv)
+layout_10.addWidget(btn_quickexport)
 
 # layout - tab SWOS
 layout_4.addWidget(lbl_league_id_swoes)
@@ -1407,7 +1436,6 @@ layout_tm.addLayout(layout_0)
 layout_tm.addLayout(layout_1)
 layout_tm.addLayout(layout_2)
 layout_tm.addLayout(layout_9)
-
 layout_tm.addWidget(btn_get_data)
 
 layout_tm.addLayout(layout_3)
@@ -1415,6 +1443,8 @@ layout_tm.addLayout(layout_3)
 layout_tm.addWidget(tabela)
 
 layout_tm.addLayout(layout_8)
+
+layout_tm.addLayout(layout_10)
 
 layout_tm.addWidget(btn_generate)
 
@@ -1426,6 +1456,6 @@ layout_swos.addLayout(layout_7)
 
 tab_TM.setLayout(layout_tm)
 tab_SWOS.setLayout(layout_swos)
-tabs.setWindowTitle("SWOS - TM Editor v1.4.3")
+tabs.setWindowTitle("SWOS - TM Editor v1.4.4")
 tabs.showMaximized()
 app.exec_()
