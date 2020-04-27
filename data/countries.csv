@@ -7,6 +7,7 @@ Angola;AGO
 Anguilla;AIA
 Antarctica;ATA
 Antigua and Barbuda;ATG
+Antigua & Barbuda;ATG
 Argentina;ARG
 Armenia;ARM
 Aruba;ABW
@@ -27,6 +28,7 @@ Bolivia;BOL
 Bonaire;BES
 Bosnia and Herzegovina;BOS
 Bosnia-Herzegovina;BOS
+Bosnia Herzegovina;BOS
 Botswana;BWA
 Bouvet Island;BVT
 Brazil;BRA
@@ -39,25 +41,31 @@ Cambodia;KHM
 Cameroon;CMR
 Canada;CAN
 Cape Verde;CPV
+Cape Verde Islands;CPV
 Cayman Islands;CYM
-Central African Republic;CAF
+Central African Republic;CUS
+CAR;CUS
 Chad;CHD
 Chile;CHL
 China;CHN
+China PR;CHN
 Christmas Island;CXR
 Cocos (Keeling) Islands;CCK
 Colombia;COL
 Comoros;COM
 Congo;CON
+DR Congo;CON
 Democratic Republic of the Congo;ZAI
 Cook Islands;COK
 Costa Rica;CRC
 Croatia;CRO
 Cuba;CUB
 Curacao;CUW
+CURAÇAO;CUW
 Cyprus;CYP
 Czech Republic;TCH
 Cote d'Ivoire;CIV
+Ivory Coast;CIV
 Denmark;DEN
 Djibouti;DJI
 Dominica;DMA
@@ -94,6 +102,7 @@ Guatemala;GTM
 Guernsey;GGY
 Guinea;GUI
 Guinea-Bissau;GNB
+Guinea Bissau;GNB
 Guyana;GUY
 Haiti;HTI
 Heard Island and McDonald Islands;HMD
@@ -105,8 +114,10 @@ Iceland;ISL
 India;IND
 Indonesia;IDN
 Iran, Islamic Republic of;IRN
+Iran;IRN
 Iraq;IRA
 Ireland;IRL
+Republic of Ireland;IRL
 Isle of Man;IMN
 Israel;ISR
 Italy;ITA
@@ -118,8 +129,10 @@ Kazakhstan;KAZ
 Kenya;KEN
 Kiribati;KIR
 Korea, Democratic People's Republic of;PRK
+Korea DPR;PRK
 Korea, Republic of;KOR
 Korea, South;KOR
+Korea Republic;KOR
 Kosovo;KOS
 Kuwait;KWT
 Kyrgyzstan;KGZ
@@ -132,9 +145,12 @@ Libya;LBY
 Liechtenstein;LIE
 Lithuania;LIT
 Luxembourg;LUX
+Luxemburg;LUX
 Macao;MAC
 Macedonia, the Former Yugoslav Republic of;MAC
 North Macedonia;MAC
+FYR Macedonia;MAC
+Northern Ireland;NIR
 Madagascar;MDG
 Malawi;MLW
 Malaysia;MLY
@@ -149,6 +165,7 @@ Mayotte;MYT
 Mexico;MEX
 Micronesia, Federated States of;FSM
 Moldova, Republic of;MOL
+Moldova;MOL
 Monaco;MCO
 Mongolia;MNG
 Montenegro;CUS
@@ -173,6 +190,7 @@ Oman;OMN
 Pakistan;PAK
 Palau;PLW
 Palestine, State of;PSE
+Palestinian Authority;PSE
 Panama;PAN
 Papua New Guinea;PAP
 Paraguay;PRY
@@ -191,13 +209,16 @@ Reunion;REU
 Saint Barthelemy;BLM
 Saint Helena;SHN
 Saint Kitts and Nevis;KNA
+ST Kitts Nevis;KNA
 Saint Lucia;LCA
+ST Lucia;LCA
 Saint Martin (French part);MAF
 Saint Pierre and Miquelon;SPM
 Saint Vincent and the Grenadines;SVC
 Samoa;WSM
 San Marino;SMR
 Sao Tome and Principe;STP
+Saint Thomas and Prince Islands;STP
 Saudi Arabia;SAU
 Scotland;SCO
 Senegal;SEN
@@ -222,15 +243,18 @@ Swaziland;SWA
 Sweden;SWE
 Switzerland;SUI
 Syrian Arab Republic;SYR
+Syria;SYR
 Taiwan;TAI
 Tajikistan;TJK
 United Republic of Tanzania;TZA
+Tanzania;TZA
 Thailand;TAD
 Timor-Leste;TLS
 Togo;TGO
 Tokelau;TKL
 Tonga;TON
 Trinidad and Tobago;TTO
+Trinidad & Tobago;TTO
 Tunisia;TUN
 Turkey;TUR
 Turkmenistan;TRK
