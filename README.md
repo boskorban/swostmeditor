@@ -77,6 +77,7 @@ pyqt5
 | 1.4.2 | 22.4.2020 | Prices CSV's corrected<br/>Quicker player deleting |
 | 1.4.3 | 24.4.2020 | Fixed bug - if there is no coach<br/>Other changes |
 | 1.4.4 | 30.4.2020 | Added quick export with some useful data for other softwares/scripts<br/>Fixed export to CSV (you can now define delimiter)<br/>Other changes |
+| 1.4.4.1 | 30.4.2020 | Quick CSV export to clipboard |
 
 # To-Do
 | Version | Planned | Description | Done |

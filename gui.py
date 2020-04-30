@@ -20,6 +20,7 @@ import math
 import ftplib
 import sqlite3
 from zipfile import ZipFile
+import pyperclip
 
 
 def returnSkillArray(n):
@@ -690,6 +691,18 @@ def on_btn_get_data_clicked():
         fillTable()
         fillTableCsv()
 
+def on_btn_quickexport_clpbrd_clicked():
+    csv_file_head = "NATIONALITY,NAME,POSITION,SKIN,SWOS_PRICE,TM_PRICE,MINUTES,IN_SQUAD,APPEREANCES,GOALS"
+
+    csv_file_formation = csv_file_head + "\n"
+    for igralec in full_arr:
+        csv_file_formation = csv_file_formation + "{},{},{},{},{},{},{},{},{},{}\n".format(igralec[0], igralec[1], igralec[2], igralec[3], igralec[11], igralec[13], igralec[14], igralec[15], igralec[16], igralec[17])
+
+    csv_file_formation = csv_file_formation.replace(',', ed_delimiter.text())
+
+    pyperclip.copy(csv_file_formation)
+
+    alert_popup("Saved to clipboard!")
 
 def on_btn_quickexport_clicked():
     csv_file_head = "NATIONALITY,NAME,POSITION,SKIN,SWOS_PRICE,TM_PRICE,MINUTES,IN_SQUAD,APPEREANCES,GOALS"
@@ -1348,6 +1361,7 @@ tabela.itemChanged.connect(changedTable)
 lbl_quick_csv = QLabel("Save to")
 ed_quick_csv = QLineEdit("C:\\SWOS")
 btn_quickexport = QPushButton('Quick export')
+btn_quickexport_clpbrd = QPushButton('Quick export - clipboard')
 btn_generate = QPushButton('Generate formation')
 
 lbl_league_id_swoes = QLabel('League ID SWOS')
@@ -1370,6 +1384,7 @@ btn_get_data.clicked.connect(on_btn_get_data_clicked)
 btn_generate.clicked.connect(on_btn_generate_clicked)
 btn_savecsv.clicked.connect(on_btn_savecsv_clicked)
 btn_quickexport.clicked.connect(on_btn_quickexport_clicked)
+btn_quickexport_clpbrd.clicked.connect(on_btn_quickexport_clpbrd_clicked)
 
 # length for labels
 lbl_team_url.setFixedWidth(100)
@@ -1427,6 +1442,7 @@ layout_8.addWidget(lbl_A_number, 7, 1, 1, 10)
 layout_10.addWidget(lbl_quick_csv)
 layout_10.addWidget(ed_quick_csv)
 layout_10.addWidget(btn_quickexport)
+layout_10.addWidget(btn_quickexport_clpbrd)
 
 # layout - tab SWOS
 layout_4.addWidget(lbl_league_id_swoes)
