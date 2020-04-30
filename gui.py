@@ -692,11 +692,13 @@ def on_btn_get_data_clicked():
 
 
 def on_btn_quickexport_clicked():
-    csv_file_head = "NATIONALITY;NAME;POSITION;SKIN;SWOS_PRICE;TM_PRICE;MINUTES;IN_SQUAD;APPEREANCES;GOALS"
+    csv_file_head = "NATIONALITY,NAME,POSITION,SKIN,SWOS_PRICE,TM_PRICE,MINUTES,IN_SQUAD,APPEREANCES,GOALS"
 
     csv_file_formation = csv_file_head + "\n"
     for igralec in full_arr:
-        csv_file_formation = csv_file_formation + "{};{};{};{};{};{};{};{};{};{}\n".format(igralec[0], igralec[1], igralec[2], igralec[3], igralec[11], igralec[13], igralec[14], igralec[15], igralec[16], igralec[17])
+        csv_file_formation = csv_file_formation + "{},{},{},{},{},{},{},{},{},{}\n".format(igralec[0], igralec[1], igralec[2], igralec[3], igralec[11], igralec[13], igralec[14], igralec[15], igralec[16], igralec[17])
+
+    csv_file_formation = csv_file_formation.replace(',', ed_delimiter.text())
 
     filename = "{}\\{}_{}_{}.csv".format(ed_quick_csv.text(), ed_team_name_tm.text(), ed_coach_name_tm.text(), ed_formation_tm.currentText())
     if not os.path.exists(os.path.dirname(filename)):
@@ -717,16 +719,15 @@ def on_btn_savecsv_clicked():
     elif ed_team_id_swoes.text() == '':
         alert_popup("Enter team ID")
     else:
-        csv_file_head = "{},{},{},{},{},,,,,,,,".format(ed_team_name_tm.text(), ed_league_id_swoes.text(
-        ), ed_team_id_swoes.text(), ed_formation_tm.currentText(), ed_coach_name_tm.text())
+        csv_file_head = "{},{},{},{},{},,,,,,,,".format(ed_team_name_tm.text(), ed_league_id_swoes.text(), ed_team_id_swoes.text(), ed_formation_tm.currentText(), ed_coach_name_tm.text())
 
         csv_file_formation = csv_file_head + "\n"
         for igralec in formation_arr[:16]:
-            csv_file_formation = csv_file_formation + "{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
-                igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6], igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], igralec[12])
+            csv_file_formation = csv_file_formation + "{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(igralec[0], igralec[1], igralec[2], igralec[3], igralec[4], igralec[5], igralec[6], igralec[7], igralec[8], igralec[9], igralec[10], igralec[11], igralec[12])
 
-        filename = "{}\\{}.csv".format(
-            ed_save_csv.text(), ed_team_name_tm.text())
+        csv_file_formation = csv_file_formation.replace(",", ed_delimiter.text())
+
+        filename = "{}\\{}.csv".format(ed_save_csv.text(), ed_team_name_tm.text())
         if not os.path.exists(os.path.dirname(filename)):
             try:
                 os.makedirs(os.path.dirname(filename))
@@ -1319,6 +1320,8 @@ lbl_futhead_yesno_tm = QLabel('Use Futhead data?')
 ed_futhead_yesno_tm = QComboBox()
 ed_futhead_yesno_tm.addItem("No")
 ed_futhead_yesno_tm.addItem("Yes")
+lbl_delimiter = QLabel("Delimiter")
+ed_delimiter = QLineEdit(",")
 
 lbl_GK = QLabel('Goalkeepers (GK)')
 lbl_GK_number = QLabel('0')
@@ -1381,6 +1384,8 @@ lbl_basic_calc_tm.setFixedWidth(100)
 lbl_futhead_calc_tm.setFixedWidth(100)
 lbl_futhead_yesno_tm.setFixedWidth(100)
 lbl_quick_csv.setFixedWidth(100)
+lbl_delimiter.setFixedWidth(70)
+ed_delimiter.setFixedWidth(50)
 
 # layout - tab TM
 layout_0.addWidget(lbl_team_url)
@@ -1401,6 +1406,8 @@ layout_9.addWidget(lbl_futhead_calc_tm)
 layout_9.addWidget(ed_futhead_calc_tm)
 layout_9.addWidget(lbl_futhead_yesno_tm)
 layout_9.addWidget(ed_futhead_yesno_tm)
+layout_9.addWidget(lbl_delimiter)
+layout_9.addWidget(ed_delimiter)
 layout_8.addWidget(lbl_GK, 0, 0)
 layout_8.addWidget(lbl_GK_number, 0, 1, 1, 10)
 layout_8.addWidget(lbl_RB, 1, 0)
