@@ -1298,8 +1298,7 @@ formation_arr = []
 
 # components for GUI
 lbl_team_url = QLabel('Team URL on TM ')
-ed_team_url = QLineEdit(
-    ' https://www.transfermarkt.com/nd-lendava-1903/startseite/verein/9233') # https://www.transfermarkt.com/slowenien/startseite/verein/3588
+ed_team_url = QLineEdit('https://www.transfermarkt.com/nd-lendava-1903/startseite/verein/9233') # https://www.transfermarkt.com/slowenien/startseite/verein/3588
 lbl_team_name = QLabel('Team short name TM ')
 ed_team_name = QLineEdit('')
 lbl_team_id = QLabel('Team ID TM')
