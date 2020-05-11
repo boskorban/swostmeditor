@@ -1,5 +1,8 @@
 # SWOS Transfermarkt Editor
 
+**This project is deprecated. 
+We are moving to new Delphi-Python project found on https://github.com/boskorban/swostmfhcalc**
+
 Download data from Transfermarkt.com and import in Amiga SWOS - https://sensiblesoccer.de/faq<br/><br/>
 Software for import to Amiga SWOS<br/>
 **AG-SWSEdt** https://github.com/anoxic83/AG_SWSEdt
