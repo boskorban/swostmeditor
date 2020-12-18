@@ -81,9 +81,14 @@ for page in range(int(page_i), TotalPages + 1):
 			i = 0
 
 	for url in url_pages:
+		print('Starting ' + url['href'])
 		temp = [0, 0, '', '']
-		while int(temp[0]) == 0 and int(temp[1]) == 0:
-			FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
+		FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
+		if FutHead_detail.status_code == 404:
+			extra_attributes.append(temp)
+			continue
+
+		while int(temp[0]) == 0 and int(temp[1]) == 0:			
 			while FutHead_detail.status_code != 200:
 				FutHead_detail = requests.get('https://www.futhead.com/{}'.format(url['href']))
 			bs = BeautifulSoup(FutHead_detail.text, 'html.parser')
