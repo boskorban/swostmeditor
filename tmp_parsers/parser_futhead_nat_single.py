@@ -117,6 +117,10 @@ for page in range(int(page_i), TotalPages + 1):
 
 			if int(temp[0]) > 0 or int(temp[1]) > 0:
 				extra_attributes.append(temp)
+			else:
+				temp[0] = 1
+				temp[1] = 1
+				extra_attributes.append(temp)
 
 		print('URL ' + url['href'] + ' is done!')
 
